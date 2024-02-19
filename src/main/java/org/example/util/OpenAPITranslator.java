@@ -22,7 +22,7 @@ public class OpenAPITranslator {
     public static EventGraph parseOPenAPI() {
         EventGraph eventGraph = new EventGraph();
         SwaggerParseResult result = new OpenAPIV3Parser()
-                .readLocation("C:/ideaProjects/!axenapi/OpenAPITranslator/api-docs.json",
+                .readLocation("C:/ideaProjects/demojavafx/api-docs.json",
                         null, null);
         OpenAPI openAPI = result.getOpenAPI();
         Components components = openAPI.getComponents();

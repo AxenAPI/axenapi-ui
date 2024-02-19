@@ -1,1 +1,134 @@
-{"openapi":"3.0.1","info":{"title":"Service 1","version":"v0"},"servers":[{"url":"http://localhost:8080","description":"Generated server url"}],"paths":{"/kafka/new_group/new_topic/ExampleOut":{"post":{"tags":["newGrpNewTopic"],"description":"New group/New topic handler","operationId":"executeExampleOut","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ExampleOut"}}},"required":true},"responses":{"200":{"description":"No return value"}}}},"/kafka/example_group/example_topic/ExampleIn":{"post":{"tags":["example"],"description":"example handler","operationId":"executeExampleIn","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ExampleIn"}}},"required":true},"responses":{"200":{"description":"Returns the reply ExampleOut to the topic passed through the replyTopic header. The return value is not intercepted","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ExampleOut"}}}}}}}},"components":{"schemas":{"ExampleOut":{"type":"object","properties":{"message":{"type":"string","description":"example field"}},"description":"example message","x-incoming":{"topics":["new_topic"]}},"ExampleIn":{"type":"object","properties":{"message":{"type":"string","description":"example field"}},"description":"example message","x-incoming":{"topics":["example_topic"]}},"Outgoing2":{"type":"object","properties":{"subject":{"type":"string","description":"subj"}},"description":"subject descr","x-outgoing":{"topics":["Outg topic"],"type":"Message","tags":["abcde","outg"]}}}}}
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Service 1",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/kafka/new_group/new_topic/ExampleOut": {
+      "post": {
+        "tags": [
+          "newGrpNewTopic"
+        ],
+        "description": "New group/New topic handler",
+        "operationId": "executeExampleOut",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExampleOut"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "No return value"
+          }
+        }
+      }
+    },
+    "/kafka/example_group/example_topic/ExampleIn": {
+      "post": {
+        "tags": [
+          "example"
+        ],
+        "description": "example handler",
+        "operationId": "executeExampleIn",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExampleIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the reply ExampleOut to the topic passed through the replyTopic header. The return value is not intercepted",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExampleOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExampleOut": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "example field"
+          }
+        },
+        "description": "example message",
+        "x-incoming": {
+          "topics": [
+            "new_topic"
+          ]
+        },
+        "x-outgoing": {
+          "topics": [
+            "new_topic"
+          ],
+          "type": "Message",
+          "tags": [
+            "abcde",
+            "outg"
+          ]
+        }
+      },
+      "ExampleIn": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "example field"
+          }
+        },
+        "description": "example message",
+        "x-incoming": {
+          "topics": [
+            "example_topic"
+          ]
+        }
+      },
+      "Outgoing2": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "subj"
+          }
+        },
+        "description": "subject descr",
+        "x-outgoing": {
+          "topics": [
+            "Outg topic"
+          ],
+          "type": "Message",
+          "tags": [
+            "abcde",
+            "outg"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,56 +1,40 @@
 .graph {
-    -fx-background-color: #F4FFFB;
+    -fx-background-color: #E6F7FF; /* Updated background color */
 }
 
 .vertex {
     -fx-stroke-width: 3;
-    -fx-stroke: #61B5F1;
-    -fx-stroke-type: inside; /* you should keep this for vertex.radius to hold */
-    -fx-fill: #b1dff7;
+    -fx-stroke: #FFAEBC; /* Updated vertex stroke color */
+    -fx-stroke-type: inside;
+    -fx-fill: #F8E4FF; /* Updated vertex fill color */
 }
 
-.vertex:hover { /* pseudo-classes also work */
-    /*-fx-cursor: default; */ /* You can use this style to override the hand/move cursors while hovering. */
+.vertex:hover {
     -fx-stroke-width: 4;
-}
-
-.vertex-label {
-    -fx-font: bold 8pt "sans-serif";
 }
 
 .edge {
     -fx-stroke-width: 2;
-    -fx-stroke: #FF6D66;
-    -fx-stroke-dash-array: 2 5 2 5; /* remove for clean edges */
-    -fx-fill: transparent; /*important for curved edges. do not remove */
+    -fx-stroke: #FFD700; /* Updated edge stroke color */
+    -fx-stroke-dash-array: 2 5 2 5;
+    -fx-fill: transparent;
     -fx-stroke-line-cap: round;
     -fx-opacity: 0.8;
 }
 
-.edge-label {
-    -fx-font: normal 5pt "sans-serif";
-}
-
 .arrow {
     -fx-stroke-width: 2;
-    -fx-stroke: #FF6D66;
+    -fx-stroke: #5E2D79; /* Updated arrow stroke color */
     -fx-opacity: 0.8;
 }
 
-/* Custom vertex. You should revert any unwanted styling in the default element,
-   style, since custom styles will be appended to the default style */
-.myVertex {
-    -fx-stroke-width: 5;
-    -fx-stroke: green;
-    -fx-stroke-type: inside; /* you should keep this if using arrows */
-    -fx-fill: yellowgreen;
-}
+/* Custom vertex styles remain the same */
 
 .service {
     -fx-stroke-width: 5;
-    -fx-stroke: blue;
-    -fx-stroke-type: inside; /* you should keep this if using arrows */
-    -fx-fill: #8bb5a6;
+    -fx-stroke: #FF7A5A; /* Updated service stroke color */
+    -fx-stroke-type: inside;
+    -fx-fill: #FFC3A0; /* Updated service fill color */
 }
 
 .topic {

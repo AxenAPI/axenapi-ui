@@ -31,7 +31,7 @@ public class HelloApplication extends Application {
 
         logger.info("JavaFX application started.");
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("main_window.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
 
         stage.setTitle("Hello!");

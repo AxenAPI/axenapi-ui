@@ -1,19 +1,24 @@
 /* styles.css */
 
 .custom-table-view {
-    -fx-background-color: #FFD700; /* Set the background color to orange */
+    -fx-background-color: #E6E6FA; /* Lavender */
     -fx-table-cell-border-color: derive(-fx-control-inner-background, -10%);
+    -fx-background-insets: 0, 1, 2;
+    -fx-padding: 10;
 }
 
 .custom-table-view .column-header-background {
-    -fx-background-color: #FFA500; /* Set the column header background color to a darker orange */
+    -fx-background-color: #7B68EE; /* MediumSlateBlue */
+    -fx-background-insets: 0, 1, 2;
 }
 
 .custom-table-view .table-cell {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
+    -fx-padding: 10;
 }
 
 .custom-table-view .table-row-cell:odd {
-    -fx-background-color: #FFEDCC; /* Set the alternating row color to a lighter shade of orange */
+    -fx-background-color: #B0E0E6; /* PowderBlue */
+    -fx-background-insets: 0, 1, 2;
 }

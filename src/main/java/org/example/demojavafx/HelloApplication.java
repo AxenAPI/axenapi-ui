@@ -1,11 +1,12 @@
 package org.example.demojavafx;
 
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
+import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Graph;
-import com.brunomnsilva.smartgraph.graph.GraphEdgeList;
 import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrategy;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartPlacementStrategy;
+import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class HelloApplication extends Application {
     private static final Logger logger = LoggerFactory.getLogger(HelloApplication.class);
@@ -37,7 +39,11 @@ public class HelloApplication extends Application {
         stage.show();
         // Create the graph
 
-        EventGraph eventGraph = OpenAPITranslator.parseOPenAPI();
+        EventGraph eventGraph1 = OpenAPITranslator.parseOPenAPI("C:/ideaProjects/demojavafx/api-docs.json");
+        EventGraph eventGraph2 = OpenAPITranslator.parseOPenAPI("C:/ideaProjects/demojavafx/api-docs2.json");
+        EventGraph eventGraph3 = OpenAPITranslator.parseOPenAPI("C:/ideaProjects/demojavafx/api-docs3.json");
+
+        EventGraph eventGraph = EventGraph.merge(EventGraph.merge(eventGraph1, eventGraph2), eventGraph3);
         Graph<Node, Link> g = eventGraphToUIGraph(eventGraph);
 // ... see Examples below
 
@@ -52,6 +58,24 @@ public class HelloApplication extends Application {
                 graphView.getStylableVertex(v.element())
                         .addStyleClass("topic");
             }
+        });
+
+        graphView.setVertexDoubleClickAction(graphVertex -> {
+            System.out.println("Vertex contains element: " + graphVertex.getUnderlyingVertex().element());
+        });
+
+        graphView.setEdgeDoubleClickAction(graphEdge -> {
+            System.out.println("Edge contains element: " + graphEdge.getUnderlyingEdge().element());
+            //dynamically change the style, can also be done for a vertex
+            Collection<Edge<Link, Node>> edges = g.edges();
+            edges.forEach(e -> {
+               if(e.element().getWhat().equals(graphEdge.getUnderlyingEdge().element().getWhat())) {
+                   SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
+                   if(!stylableEdge.removeStyleClass("selectedEvent")) {
+                       stylableEdge.addStyleClass("selectedEvent");
+                   }
+               }
+            });
         });
 
         Scene scene2 = new Scene(graphView, 1024, 768);

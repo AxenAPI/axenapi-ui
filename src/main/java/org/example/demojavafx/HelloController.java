@@ -11,6 +11,6 @@ public class HelloController {
     @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
-        OpenAPITranslator.parseOPenAPI();
+        OpenAPITranslator.parseOPenAPI("C:/ideaProjects/demojavafx/api-docs2.json");
     }
 }

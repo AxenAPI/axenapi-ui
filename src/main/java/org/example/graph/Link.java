@@ -52,4 +52,12 @@ public class Link {
     public String view() {
         return what;
     }
+
+    public void setFrom(Node node) {
+        from = node;
+    }
+
+    public void setTo(Node node) {
+        to = node;
+    }
 }

@@ -42,4 +42,22 @@ public class EventGraph {
     public Set<Node> getNodes() {
         return nodes;
     }
+
+    public static EventGraph merge(EventGraph g1, EventGraph g2) {
+        EventGraph merged = new EventGraph();
+        g1.getNodes().forEach(merged::addNode);
+        g1.getLinks().forEach(merged::addLink);
+        g2.getNodes().forEach(merged::addNode);
+        g2.getLinks().forEach(merged::addLink);
+
+        merged.links.forEach(l -> {
+            Node node = merged.getNode(l.getFrom().getName(), l.getFrom().getType());
+            l.setFrom(node);
+            node = merged.getNode(l.getTo().getName(), l.getTo().getType());
+            l.setTo(node);
+        });
+
+        return merged;
+    }
 }
+

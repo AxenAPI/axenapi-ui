@@ -4,25 +4,22 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.parameters.Parameter;
-import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.Node;
 import org.example.graph.NodeType;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
 
 public class OpenAPITranslator {
 
-    public static EventGraph parseOPenAPI() {
+    public static EventGraph parseOPenAPI(String filePath) {
         EventGraph eventGraph = new EventGraph();
         SwaggerParseResult result = new OpenAPIV3Parser()
-                .readLocation("C:/ideaProjects/demojavafx/api-docs.json",
+                .readLocation(filePath,
                         null, null);
         OpenAPI openAPI = result.getOpenAPI();
         Components components = openAPI.getComponents();

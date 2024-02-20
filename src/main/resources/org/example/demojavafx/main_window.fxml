@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.demojavafx.MainWindow">
+    <stylesheets>
+        <URL value="@styles.css" />
+    </stylesheets>
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <!-- Add file options here -->
+            </Menu>
+            <Menu text="Help">
+                <!-- Add help options here -->
+            </Menu>
+        </MenuBar>
+    </top>
+    <!-- Add the rest of your UI components here -->
+    <center>
+        <VBox alignment="CENTER" spacing="10">
+            <Button text="Choose Files" onAction="#chooseFiles"/>
+            <TableView fx:id="fileInfoTable">
+                <columns>
+                    <TableColumn text="File Name"/>
+                    <TableColumn text="Title"/>
+                </columns>
+            </TableView>
+            <Button text="View Event Graph" onAction="#viewEventGraph"/>
+        </VBox>
+    </center>
+</BorderPane>

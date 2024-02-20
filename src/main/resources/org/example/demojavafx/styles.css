@@ -1,0 +1,19 @@
+/* styles.css */
+
+.custom-table-view {
+    -fx-background-color: #FFD700; /* Set the background color to orange */
+    -fx-table-cell-border-color: derive(-fx-control-inner-background, -10%);
+}
+
+.custom-table-view .column-header-background {
+    -fx-background-color: #FFA500; /* Set the column header background color to a darker orange */
+}
+
+.custom-table-view .table-cell {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.custom-table-view .table-row-cell:odd {
+    -fx-background-color: #FFEDCC; /* Set the alternating row color to a lighter shade of orange */
+}

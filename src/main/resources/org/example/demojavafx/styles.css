@@ -1,24 +1,21 @@
 /* styles.css */
+.form-label {
+    -fx-font-size: 14pt;
+    -fx-text-fill: #333333;
+}
+
+.form-button {
+    -fx-font-size: 12pt;
+    -fx-background-color: #4CAF50; /* Green background */
+    -fx-text-fill: white; /* White text */
+    -fx-padding: 10px 20px; /* Add some padding for better clickability */
+    -fx-background-radius: 5px; /* Rounded corners */
+}
 
 .custom-table-view {
-    -fx-background-color: #E6E6FA; /* Lavender */
-    -fx-table-cell-border-color: derive(-fx-control-inner-background, -10%);
-    -fx-background-insets: 0, 1, 2;
-    -fx-padding: 10;
+    -fx-background-color: #f2f2f2; /* Light grey background */
 }
 
-.custom-table-view .column-header-background {
-    -fx-background-color: #7B68EE; /* MediumSlateBlue */
-    -fx-background-insets: 0, 1, 2;
-}
-
-.custom-table-view .table-cell {
-    -fx-font-size: 14px;
-    -fx-text-fill: #333333;
-    -fx-padding: 10;
-}
-
-.custom-table-view .table-row-cell:odd {
-    -fx-background-color: #B0E0E6; /* PowderBlue */
-    -fx-background-insets: 0, 1, 2;
+.table-column {
+    -fx-alignment: CENTER; /* Center align the content in the table columns */
 }

@@ -4,6 +4,9 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Button?>
 
 <?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -22,19 +25,30 @@
         </MenuBar>
     </top>
     <center>
-        <VBox alignment="CENTER" spacing="10">
-            <Label text="Choose files to be used to draw the event graph" />
-            <HBox alignment="CENTER" spacing="10">
-                <Button text="Choose Files" onAction="#chooseFiles"/>
-                <Button text="View Event Graph" onAction="#viewEventGraph"/>
-            </HBox>
-            <TableView fx:id="fileInfoTable" styleClass="custom-table-view">
-                <columns>
-                    <TableColumn text="File Name" styleClass="table-column"/>
-                    <TableColumn text="Title" styleClass="table-column"/>
-                    <TableColumn text="Select" fx:id="selectColumn"/>
-                </columns>
-            </TableView>
-        </VBox>
+        <SplitPane>
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Choose files to be used to draw the event graph" styleClass="form-label" />
+                <HBox alignment="CENTER" spacing="10">
+                    <Button text="Choose Files" onAction="#chooseFiles" styleClass="form-button"/>
+                    <Button text="View Event Graph" onAction="#viewEventGraph" styleClass="form-button"/>
+                </HBox>
+                <TableView fx:id="fileInfoTable" styleClass="custom-table-view">
+                    <columns>
+                        <TableColumn text="File Name" styleClass="table-column"/>
+                        <TableColumn text="Title" styleClass="table-column"/>
+                        <TableColumn text="Select" fx:id="selectColumn" styleClass="table-column"/>
+                    </columns>
+                </TableView>
+                <Button text="Export Specification" onAction="#exportSpecification" styleClass="form-button"/>
+                <HBox alignment="CENTER" spacing="10">
+                    <Label text="Zoom:" styleClass="form-label" />
+                    <Slider fx:id="zoomSlider" min="1.0" max="5.0" value="1.0" showTickLabels="true" showTickMarks="true" />
+                    <Button text="Reset Zoom" onAction="#resetZoom" styleClass="form-button"/>
+                </HBox>
+            </VBox>
+            <VBox>
+                <Canvas fx:id="eventGraphCanvas" width="400" height="400" />
+            </VBox>
+        </SplitPane>
     </center>
 </BorderPane>

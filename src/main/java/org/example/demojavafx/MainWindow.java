@@ -14,4 +14,16 @@ public class MainWindow {
     public void chooseFiles(ActionEvent actionEvent) {
 
     }
+
+    public void addFile(ActionEvent actionEvent) {
+
+    }
+
+    public void resetZoom(ActionEvent actionEvent) {
+
+    }
+
+    public void exportSpecification(ActionEvent actionEvent) {
+
+    }
 }

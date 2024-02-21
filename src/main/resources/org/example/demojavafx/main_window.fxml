@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="yourControllerClass">
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.demojavafx.MainWindow">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
@@ -22,10 +23,10 @@
     </top>
     <center>
         <VBox alignment="CENTER" spacing="10">
+            <Label text="Choose files to be used to draw the event graph" />
             <HBox alignment="CENTER" spacing="10">
-                <Label text="Search:"/>
-                <TextField promptText="Enter search criteria"/>
-                <Button text="Search" onAction="#search"/>
+                <Button text="Choose Files" onAction="#chooseFiles"/>
+                <Button text="View Event Graph" onAction="#viewEventGraph"/>
             </HBox>
             <TableView fx:id="fileInfoTable" styleClass="custom-table-view">
                 <columns>
@@ -34,10 +35,6 @@
                     <TableColumn text="Select" fx:id="selectColumn"/>
                 </columns>
             </TableView>
-            <HBox alignment="CENTER" spacing="10">
-                <Button text="View Details" onAction="#viewDetails"/>
-                <Button text="Export Data" onAction="#exportData"/>
-            </HBox>
         </VBox>
     </center>
 </BorderPane>

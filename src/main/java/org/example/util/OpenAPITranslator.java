@@ -26,7 +26,7 @@ public class OpenAPITranslator {
         Info info = openAPI.getInfo();
         String title = info.getTitle();
 
-        Node serviceNode = new Node(title, NodeType.SERVICE);
+        Node serviceNode = new Node(title, NodeType.SERVICE, title);
         eventGraph.addNode(serviceNode);
         Map<String, Schema> schemas = components.getSchemas();
 
@@ -38,7 +38,7 @@ public class OpenAPITranslator {
                 List<String> topics = (List<String>) xIncoming.get("topics");
                 // add topics to Node list, if not already there
                 topics.forEach(topic -> {
-                    Node incomingTopic = new Node(topic, NodeType.TOPIC);
+                    Node incomingTopic = new Node(topic, NodeType.TOPIC, title);
                     if (!eventGraph.containsNode(topic, NodeType.TOPIC)) {
                         eventGraph.addNode(incomingTopic);
                     } else {
@@ -54,7 +54,7 @@ public class OpenAPITranslator {
                 List<String> topics = (List<String>) xOutgoing.get("topics");
                 // add topics to Node list, if not already there
                 topics.forEach(topic -> {
-                    Node outgoingTopic = new Node(topic, NodeType.TOPIC);
+                    Node outgoingTopic = new Node(topic, NodeType.TOPIC, title);
                     if (!eventGraph.containsNode(topic, NodeType.TOPIC)) {
                         eventGraph.addNode(outgoingTopic);
                     } else {

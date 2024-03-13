@@ -48,7 +48,7 @@ dependencies {
     }
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
 
-    implementation('com.brunomnsilva:smartgraph:1.0.0')
+    implementation('com.brunomnsilva:smartgraph:1.1.0')
     implementation ('io.swagger.parser.v3:swagger-parser:2.1.20') {
         exclude(group: 'javax.validation')
         exclude(group: 'com.github.java-json-tools')

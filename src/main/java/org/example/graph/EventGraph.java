@@ -1,10 +1,14 @@
 package org.example.graph;
 
+import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
+import com.brunomnsilva.smartgraph.graph.Graph;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class EventGraph {
+    private String name;
     private Set<Node> nodes = new HashSet<>();
     private Set<Link> links = new HashSet<>();
 
@@ -58,6 +62,24 @@ public class EventGraph {
         });
 
         return merged;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static Graph<Node, Link> eventGraphToUIGraph(EventGraph eventGraph) {
+        Graph<Node, Link> g = new DigraphEdgeList<>();
+        eventGraph.getNodes().forEach(g::insertVertex);
+        eventGraph.getLinks().forEach(link -> {
+            g.insertEdge(link.getFrom(), link.getTo(), link);
+        });
+
+        return g;
     }
 }
 

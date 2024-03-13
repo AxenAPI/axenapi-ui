@@ -44,7 +44,7 @@ public class HelloApplication extends Application {
         EventGraph eventGraph3 = OpenAPITranslator.parseOPenAPI("C:/ideaProjects/demojavafx/api-docs3.json");
 
         EventGraph eventGraph = EventGraph.merge(EventGraph.merge(eventGraph1, eventGraph2), eventGraph3);
-        Graph<Node, Link> g = eventGraphToUIGraph(eventGraph);
+        Graph<Node, Link> g = EventGraph.eventGraphToUIGraph(eventGraph);
 // ... see Examples below
 
         SmartPlacementStrategy strategy = new SmartCircularSortedPlacementStrategy();
@@ -89,15 +89,7 @@ public class HelloApplication extends Application {
         graphView.init();
     }
 
-    private Graph<Node, Link> eventGraphToUIGraph(EventGraph eventGraph) {
-        Graph<Node, Link> g = new DigraphEdgeList<>();
-        eventGraph.getNodes().forEach(g::insertVertex);
-        eventGraph.getLinks().forEach(link -> {
-            g.insertEdge(link.getFrom(), link.getTo(), link);
-        });
 
-        return g;
-    }
 
     public static void main(String[] args) {
         launch();

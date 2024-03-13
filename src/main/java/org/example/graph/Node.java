@@ -8,13 +8,15 @@ import java.util.UUID;
 public class Node {
 
     private UUID id;
+    private String graphName;
     private String name;
     private NodeType type;
 
-    public Node(String name, NodeType type) {
+    public Node(String name, NodeType type, String graphName) {
         this.name = name;
         this.type = type;
         this.id = UUID.randomUUID();
+        this.graphName = graphName;
     }
 
     public boolean equals(Object o) {
@@ -42,6 +44,7 @@ public class Node {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", type=" + type +
+                ", graphName='" + graphName + '\'' +
                 '}';
     }
 

@@ -11,6 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 
 <?import java.net.URL?>
+<?import javafx.scene.SubScene?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.demojavafx.MainWindow">
     <stylesheets>
@@ -43,8 +44,7 @@
                 </TableView>
                 <Button text="Export Specification" onAction="#exportSpecification" styleClass="form-button"/>
             </VBox>
-            <StackPane>
-                <Canvas fx:id="eventGraphCanvas" width="400" height="400" />
+            <StackPane fx:id="pane">
                 <VBox alignment="BOTTOM_RIGHT" spacing="10" styleClass="zoom-panel">
                     <Slider fx:id="zoomSlider" min="1.0" max="5.0" value="1.0" showTickLabels="true" showTickMarks="true" orientation="VERTICAL" />
                     <Button onAction="#resetZoom" styleClass="reset-button">

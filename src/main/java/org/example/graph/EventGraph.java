@@ -81,5 +81,9 @@ public class EventGraph {
 
         return g;
     }
+
+    public String getTitle() {
+        return name;
+    }
 }
 

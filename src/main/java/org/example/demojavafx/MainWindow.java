@@ -6,12 +6,16 @@ import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrateg
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartPlacementStrategy;
 import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import org.example.graph.EventGraph;
@@ -21,13 +25,24 @@ import org.example.util.OpenAPITranslator;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 
 public class MainWindow {
 
     public StackPane pane;
+    public TableView<MyDataModel> fileInfoTable;
+    ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
+
+
+    public void initialize() {
+        fileInfoTable.setItems(tableData);
+        TableColumn<MyDataModel, ?> column1 = fileInfoTable.getVisibleLeafColumn(0);
+        column1.setCellValueFactory(new PropertyValueFactory<>("fileName"));
+        TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(1);
+        column2.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+    }
 
     public void viewEventGraph(ActionEvent actionEvent) {
 
@@ -50,6 +65,8 @@ public class MainWindow {
                 // read all content from file and put it in a one string
                 EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(file.getAbsolutePath());
                 allFilesGraph = EventGraph.merge(allFilesGraph, eventGraph);
+                // java code: add raw in table fileInfoTable
+                tableData.add(new MyDataModel(file.getName(), eventGraph.getTitle()));
             }
 
             Graph<org.example.graph.Node, Link> g = EventGraph.eventGraphToUIGraph(allFilesGraph);
@@ -91,6 +108,8 @@ public class MainWindow {
             // add subscene in pane
             pane.getChildren().add(eventGraphScene);
             graphView.init();
+
+
         }
     }
 

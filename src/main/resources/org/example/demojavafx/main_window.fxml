@@ -12,6 +12,7 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.SubScene?>
+<?import javafx.collections.ObservableList?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.demojavafx.MainWindow">
     <stylesheets>
@@ -35,11 +36,12 @@
                     <Button text="Choose Files" onAction="#chooseFiles" styleClass="form-button"/>
                     <Button text="View Event Graph" onAction="#viewEventGraph" styleClass="form-button"/>
                 </HBox>
+
                 <TableView fx:id="fileInfoTable" styleClass="custom-table-view">
                     <columns>
                         <TableColumn text="File Name" styleClass="table-column"/>
                         <TableColumn text="Title" styleClass="table-column"/>
-                        <TableColumn text="Select" fx:id="selectColumn" styleClass="table-column"/>
+                        <TableColumn text="Select" styleClass="table-column"/>
                     </columns>
                 </TableView>
                 <Button text="Export Specification" onAction="#exportSpecification" styleClass="form-button"/>

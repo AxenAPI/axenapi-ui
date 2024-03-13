@@ -26,6 +26,7 @@ public class OpenAPITranslator {
         Info info = openAPI.getInfo();
         String title = info.getTitle();
 
+        eventGraph.setName(title);
         Node serviceNode = new Node(title, NodeType.SERVICE, title);
         eventGraph.addNode(serviceNode);
         Map<String, Schema> schemas = components.getSchemas();

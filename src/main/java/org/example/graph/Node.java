@@ -2,21 +2,21 @@ package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graphview.SmartLabelSource;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Node {
 
     private UUID id;
-    private String graphName;
+    private List<String> belongsToGraph;
     private String name;
     private NodeType type;
 
-    public Node(String name, NodeType type, String graphName) {
+    public Node(String name, NodeType type, String belongsToGraph) {
         this.name = name;
         this.type = type;
         this.id = UUID.randomUUID();
-        this.graphName = graphName;
+        this.belongsToGraph = new ArrayList<>();
+        this.belongsToGraph.add(belongsToGraph);
     }
 
     public boolean equals(Object o) {
@@ -44,12 +44,20 @@ public class Node {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", type=" + type +
-                ", graphName='" + graphName + '\'' +
+                ", graphName='" + belongsToGraph + '\'' +
                 '}';
     }
 
     @SmartLabelSource
     public String view() {
         return name;
+    }
+
+    public void removeBelongsToGraph(String graphName) {
+        belongsToGraph.remove(graphName);
+    }
+
+    public List<String> getBelongsToGraph() {
+        return belongsToGraph;
     }
 }

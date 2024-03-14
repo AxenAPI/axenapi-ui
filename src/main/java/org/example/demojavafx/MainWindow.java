@@ -13,6 +13,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -33,6 +35,7 @@ public class MainWindow {
     public StackPane pane;
     public TableView<MyDataModel> fileInfoTable;
     ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
+    EventGraph allFilesGraph = new EventGraph();
 
 
     public void initialize() {
@@ -41,6 +44,42 @@ public class MainWindow {
         column1.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(1);
         column2.setCellValueFactory(new PropertyValueFactory<>("title"));
+        TableColumn<MyDataModel, Boolean> selectColumn = new TableColumn<>("Select");
+
+        selectColumn.setCellFactory(column -> new TableCell<>() {
+            private final CheckBox checkBox = new CheckBox();
+
+            {
+                checkBox.setOnAction(event -> {
+                    MyDataModel rowData = getTableView().getItems().get(getIndex());
+                    rowData.setSelected(checkBox.isSelected());
+                    System.out.println("Selected: " + rowData.getFileName() + rowData.getTitle() + " " +
+                            String.valueOf(rowData.isSelected()));
+
+                    if (rowData.isSelected()) {
+                        System.out.println("Selected: " + rowData.getFileName() + " " + rowData.getTitle());
+                        allFilesGraph = allFilesGraph.plus(rowData.getAbsolutePath());
+                    } else {
+                        System.out.println("Not Selected: " + rowData.getFileName() + " " + rowData.getTitle());
+                        allFilesGraph.minus(rowData.getTitle());
+                    }
+                    drawGraph();
+                });
+            }
+
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    checkBox.setSelected(item != null && item);
+                    setGraphic(checkBox);
+                }
+            }
+        });
+
+        fileInfoTable.getColumns().add(selectColumn);
 
     }
 
@@ -58,7 +97,7 @@ public class MainWindow {
 
 
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) actionEvent.getTarget()).getScene().getWindow());
-        EventGraph allFilesGraph = new EventGraph();
+
         if (selectedFiles != null) {
             // Process the selected files
             for (File file : selectedFiles) {
@@ -66,50 +105,9 @@ public class MainWindow {
                 EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(file.getAbsolutePath());
                 allFilesGraph = EventGraph.merge(allFilesGraph, eventGraph);
                 // java code: add raw in table fileInfoTable
-                tableData.add(new MyDataModel(file.getName(), eventGraph.getTitle()));
+                tableData.add(new MyDataModel(file.getName(), eventGraph.getTitle(), file.getAbsolutePath()));
             }
-
-            Graph<org.example.graph.Node, Link> g = EventGraph.eventGraphToUIGraph(allFilesGraph);
-
-            SmartPlacementStrategy strategy = new SmartCircularSortedPlacementStrategy();
-            SmartGraphPanel<org.example.graph.Node, Link> graphView = new SmartGraphPanel<>(g, strategy);
-
-            g.vertices().forEach(v -> {
-                if (v.element().getType() == NodeType.SERVICE) {
-                    graphView.getStylableVertex(v.element())
-                            .addStyleClass("service");
-                } else if (v.element().getType() == NodeType.TOPIC) {
-                    graphView.getStylableVertex(v.element())
-                            .addStyleClass("topic");
-                }
-            });
-
-            graphView.setVertexDoubleClickAction(graphVertex -> {
-                System.out.println("Vertex contains element: " + graphVertex.getUnderlyingVertex().element());
-            });
-
-            graphView.setEdgeDoubleClickAction(graphEdge -> {
-                System.out.println("Edge contains element: " + graphEdge.getUnderlyingEdge().element());
-                //dynamically change the style, can also be done for a vertex
-                Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
-                edges.forEach(e -> {
-                    if(e.element().getWhat().equals(graphEdge.getUnderlyingEdge().element().getWhat())) {
-                        SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
-                        if(!stylableEdge.removeStyleClass("selectedEvent")) {
-                            stylableEdge.addStyleClass("selectedEvent");
-                        }
-                    }
-                });
-            });
-
-            SubScene eventGraphScene = new SubScene(graphView, 1024, 768);
-            eventGraphScene.setRoot(graphView);
-
-            // add subscene in pane
-            pane.getChildren().add(eventGraphScene);
-            graphView.init();
-
-
+            drawGraph();
         }
     }
 
@@ -119,5 +117,46 @@ public class MainWindow {
 
     public void exportSpecification(ActionEvent actionEvent) {
 
+    }
+
+    public void drawGraph() {
+        Graph<org.example.graph.Node, Link> g = EventGraph.eventGraphToUIGraph(allFilesGraph);
+        SmartPlacementStrategy strategy = new SmartCircularSortedPlacementStrategy();
+        SmartGraphPanel<org.example.graph.Node, Link> graphView = new SmartGraphPanel<>(g, strategy);
+
+        g.vertices().forEach(v -> {
+            if (v.element().getType() == NodeType.SERVICE) {
+                graphView.getStylableVertex(v.element())
+                        .addStyleClass("service");
+            } else if (v.element().getType() == NodeType.TOPIC) {
+                graphView.getStylableVertex(v.element())
+                        .addStyleClass("topic");
+            }
+        });
+
+        graphView.setVertexDoubleClickAction(graphVertex -> {
+            System.out.println("Vertex contains element: " + graphVertex.getUnderlyingVertex().element());
+        });
+
+        graphView.setEdgeDoubleClickAction(graphEdge -> {
+            System.out.println("Edge contains element: " + graphEdge.getUnderlyingEdge().element());
+            //dynamically change the style, can also be done for a vertex
+            Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
+            edges.forEach(e -> {
+                if(e.element().getWhat().equals(graphEdge.getUnderlyingEdge().element().getWhat())) {
+                    SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
+                    if(!stylableEdge.removeStyleClass("selectedEvent")) {
+                        stylableEdge.addStyleClass("selectedEvent");
+                    }
+                }
+            });
+        });
+
+        SubScene eventGraphScene = new SubScene(graphView, 1024, 768);
+        eventGraphScene.setRoot(graphView);
+
+        // add subscene in pane
+        pane.getChildren().add(eventGraphScene);
+        graphView.init();
     }
 }

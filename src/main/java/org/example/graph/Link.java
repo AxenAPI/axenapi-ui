@@ -5,14 +5,16 @@ import com.brunomnsilva.smartgraph.graphview.SmartLabelSource;
 import java.util.Objects;
 
 public class Link {
+    private String name;
      private Node from;
      private Node to;
      private String what;
 
-     public Link(Node from, Node to, String what) {
+     public Link(Node from, Node to, String what, String name) {
          this.from = from;
          this.to = to;
          this.what = what;
+         this.name = name;
      }
 
      public boolean equals(Object o) {
@@ -59,5 +61,9 @@ public class Link {
 
     public void setTo(Node node) {
         to = node;
+    }
+
+    public String getName() {
+        return name;
     }
 }

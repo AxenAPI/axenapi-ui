@@ -2,6 +2,7 @@ package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Graph;
+import org.example.util.OpenAPITranslator;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -84,6 +85,18 @@ public class EventGraph {
 
     public String getTitle() {
         return name;
+    }
+
+    public void minus(String graphName) {
+        nodes.forEach(node -> node.removeBelongsToGraph(graphName));
+        nodes.removeIf(node -> node.getBelongsToGraph().isEmpty());
+        links.removeIf(link -> link.getName().equals(graphName));
+    }
+
+    public EventGraph plus(String filePath) {
+        EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(filePath);
+        EventGraph merge = merge(this, eventGraph);
+        return merge;
     }
 }
 

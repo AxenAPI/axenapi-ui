@@ -45,7 +45,7 @@ public class OpenAPITranslator {
                     } else {
                         incomingTopic = eventGraph.getNode(topic, NodeType.TOPIC);
                     }
-                    Link incomingLink = new Link(incomingTopic, serviceNode, schemaName);
+                    Link incomingLink = new Link(incomingTopic, serviceNode, schemaName, title);
                     eventGraph.addLink(incomingLink);
                 });
             }
@@ -61,7 +61,7 @@ public class OpenAPITranslator {
                     } else {
                         outgoingTopic = eventGraph.getNode(topic, NodeType.TOPIC);
                     }
-                    Link outgoungLink = new Link(serviceNode, outgoingTopic, schemaName);
+                    Link outgoungLink = new Link(serviceNode, outgoingTopic, schemaName, title);
                     eventGraph.addLink(outgoungLink);
                 });
             }

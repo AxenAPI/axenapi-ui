@@ -1,0 +1,18 @@
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #FF6347; /* Change text color to orange */
+}
+
+.comboBox {
+    -fx-pref-width: 200px;
+    -fx-background-color: #ADD8E6; /* Change background color to light blue */
+}
+
+.toggle-switch {
+    -toggle-switch-color: #FFD700; /* Change toggle switch color to gold */
+}
+
+.button {
+    -fx-background-color: #8A2BE2; /* Change button background color to blue violet */
+    -fx-text-fill: white;
+}

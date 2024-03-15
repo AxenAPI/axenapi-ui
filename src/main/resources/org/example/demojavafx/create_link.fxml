@@ -4,33 +4,21 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center"
-          fx:controller="org.example.demojavafx.CreateLink" hgap="10" vgap="10">
+          fx:controller="org.example.demojavafx.CreateLink" hgap="10" vgap="10" stylesheets="@link.css">
 
-    <columnConstraints>
-        <ColumnConstraints hgrow="NEVER" />
-        <ColumnConstraints hgrow="ALWAYS" />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints vgrow="NEVER" />
-        <RowConstraints vgrow="NEVER" />
-        <RowConstraints vgrow="NEVER" />
-        <RowConstraints vgrow="NEVER" />
-    </rowConstraints>
+    <Label text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="label"/>
+    <ComboBox fx:id="topicComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="comboBox"/>
 
-    <Label text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <ComboBox fx:id="topicComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="label"/>
+    <ComboBox fx:id="serviceComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="comboBox"/>
 
-    <Label text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <ComboBox fx:id="serviceComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Label text="Select the direction:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="label"/>
+    <ToggleSwitch fx:id="directionToggleSwitch" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="toggle-switch"/>
 
-    <Label text="Select the direction:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-
-    <ToggleSwitch fx:id="directionToggleSwitch" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-    <Label text="Select event:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <Label text="Select event:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="label"/>
     <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <ComboBox fx:id="existingEventComboBox" />
-        <Button text="Create New Event" onAction="#handleNewEvent" />
+        <ComboBox fx:id="existingEventComboBox" styleClass="comboBox" />
+        <Button text="Create New Event" onAction="#handleNewEvent" styleClass="button" />
     </HBox>
 
 </GridPane>

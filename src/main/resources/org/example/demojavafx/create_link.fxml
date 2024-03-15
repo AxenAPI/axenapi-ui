@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" alignment="center"
+          fx:controller="org.example.demojavafx.CreateLink">
+    <Label text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <ComboBox fx:id="topicComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+    <Label text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <ComboBox fx:id="serviceComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <Label text="Select the direction:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+    <RadioButton text="Send" fx:id="sendRadioButton" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <RadioButton text="Receive" fx:id="receiveRadioButton" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+
+    <Button text="Create New Event" onAction="#handleNewEvent" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <ComboBox fx:id="existingEventComboBox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+</GridPane>

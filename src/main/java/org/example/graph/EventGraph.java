@@ -52,7 +52,14 @@ public class EventGraph {
         EventGraph merged = new EventGraph();
         g1.getNodes().forEach(merged::addNode);
         g1.getLinks().forEach(merged::addLink);
-        g2.getNodes().forEach(merged::addNode);
+        g2.getNodes().forEach(n -> {
+            Node node = merged.getNode(n.getName(), n.getType());
+            if (node != null) {
+                node.addBelongsToGraph(n.getBelongsToGraph());
+            } else {
+                merged.addNode(n);
+            }
+        });
         g2.getLinks().forEach(merged::addLink);
 
         merged.links.forEach(l -> {

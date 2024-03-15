@@ -6,12 +6,13 @@ import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrateg
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartPlacementStrategy;
 import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
@@ -20,6 +21,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
@@ -73,7 +75,7 @@ public class MainWindow {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    checkBox.setSelected(item != null && item);
+                    checkBox.setSelected(item == null || item);
                     setGraphic(checkBox);
                 }
             }
@@ -158,5 +160,28 @@ public class MainWindow {
         // add subscene in pane
         pane.getChildren().add(eventGraphScene);
         graphView.init();
+    }
+
+    public void addService(ActionEvent actionEvent) {
+        int number = tableData.size() + 1;
+        allFilesGraph.addNode(new org.example.graph.Node("New_Service_" + number , NodeType.SERVICE, "New_Service_" + number));
+        drawGraph();
+        tableData.add(new MyDataModel("New_Service_" + number, "New_Service_" + number, ""));
+    }
+
+    public void createLink(ActionEvent actionEvent) {
+        //open window create_link.fxml
+
+        try {
+            Stage stage = new Stage();
+            Parent root = null;
+            root = FXMLLoader.load(getClass().getResource("create_link.fxml"));
+            stage.setTitle("Create Link Form");
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

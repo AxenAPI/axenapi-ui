@@ -60,4 +60,13 @@ public class Node {
     public List<String> getBelongsToGraph() {
         return belongsToGraph;
     }
+
+    public void addBelongsToGraph(List<String> belongsToGraph) {
+        if(this.belongsToGraph != null) {
+            this.belongsToGraph.addAll(belongsToGraph);
+        } else {
+            this.belongsToGraph = new ArrayList<>();
+            this.belongsToGraph.addAll(belongsToGraph);
+        }
+    }
 }

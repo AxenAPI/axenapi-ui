@@ -2,6 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.controlsfx.control.ToggleSwitch?>
 <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center"
           fx:controller="org.example.demojavafx.CreateLink">
     <Label text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
@@ -12,10 +13,10 @@
 
     <Label text="Select the direction:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
 
-    <RadioButton text="Send" fx:id="sendRadioButton" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <RadioButton text="Receive" fx:id="receiveRadioButton" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <ToggleSwitch fx:id="directionToggleSwitch" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
+    <Label text="Select event:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
 
-    <Button text="Create New Event" onAction="#handleNewEvent" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <Button text="Create New Event" onAction="#handleNewEvent" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
     <ComboBox fx:id="existingEventComboBox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 </GridPane>

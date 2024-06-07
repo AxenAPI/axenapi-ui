@@ -84,9 +84,13 @@ public class EventGraph {
 
     public static Graph<Node, Link> eventGraphToUIGraph(EventGraph eventGraph) {
         Graph<Node, Link> g = new DigraphEdgeList<>();
-        eventGraph.getNodes().forEach(g::insertVertex);
+        eventGraph.getNodes().stream()
+                .filter(Node::isVisible)
+                .forEach(g::insertVertex);
         eventGraph.getLinks().forEach(link -> {
-            g.insertEdge(link.getFrom(), link.getTo(), link);
+            if(link.getFrom().isVisible() && link.getTo().isVisible()) {
+                g.insertEdge(link.getFrom(), link.getTo(), link);
+            }
         });
 
         return g;

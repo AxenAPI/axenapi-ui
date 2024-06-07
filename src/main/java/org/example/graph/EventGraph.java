@@ -6,7 +6,9 @@ import org.example.util.OpenAPITranslator;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EventGraph {
     private String name;
@@ -96,14 +98,31 @@ public class EventGraph {
 
     public void minus(String graphName) {
         nodes.forEach(node -> node.removeBelongsToGraph(graphName));
-        nodes.removeIf(node -> node.getBelongsToGraph().isEmpty());
-        links.removeIf(link -> link.getName().equals(graphName));
+        //nodes.removeIf(node -> node.getBelongsToGraph().isEmpty());
+        nodes.forEach(node -> {
+            if(node.getBelongsToGraph().isEmpty()) {
+                node.setVisible(false);
+            }
+        });
+
+        links.forEach(link -> {
+            if(link.getName().equals(graphName)) {
+                link.setVisible(false);
+            }
+        });
+        //links.removeIf(link -> link.getName().equals(graphName));
     }
 
     public EventGraph plus(String filePath) {
         EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(filePath);
         EventGraph merge = merge(this, eventGraph);
         return merge;
+    }
+
+    public List<Node> getNodesByType(NodeType nodeType) {
+        return nodes.stream()
+                .filter(node -> node.getType() == nodeType)
+                .collect(Collectors.toList());
     }
 }
 

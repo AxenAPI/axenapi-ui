@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
+import org.example.util.EventGraphService;
 import org.example.util.OpenAPITranslator;
 
 import java.io.File;
@@ -37,7 +38,8 @@ public class MainWindow {
     public StackPane pane;
     public TableView<MyDataModel> fileInfoTable;
     ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
-    EventGraph allFilesGraph = new EventGraph();
+
+    private EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
 
 
     public void initialize() {
@@ -60,10 +62,11 @@ public class MainWindow {
 
                     if (rowData.isSelected()) {
                         System.out.println("Selected: " + rowData.getFileName() + " " + rowData.getTitle());
-                        allFilesGraph = allFilesGraph.plus(rowData.getAbsolutePath());
+                        EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(rowData.getAbsolutePath());
+                        eventGraphService.mergeEventGraph(eventGraph);
                     } else {
                         System.out.println("Not Selected: " + rowData.getFileName() + " " + rowData.getTitle());
-                        allFilesGraph.minus(rowData.getTitle());
+                        eventGraphService.removeEventGraph(rowData.getTitle());
                     }
                     drawGraph();
                 });
@@ -105,7 +108,7 @@ public class MainWindow {
             for (File file : selectedFiles) {
                 // read all content from file and put it in a one string
                 EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(file.getAbsolutePath());
-                allFilesGraph = EventGraph.merge(allFilesGraph, eventGraph);
+                eventGraphService.mergeEventGraph(eventGraph);
                 // java code: add raw in table fileInfoTable
                 tableData.add(new MyDataModel(file.getName(), eventGraph.getTitle(), file.getAbsolutePath()));
             }
@@ -122,7 +125,7 @@ public class MainWindow {
     }
 
     public void drawGraph() {
-        Graph<org.example.graph.Node, Link> g = EventGraph.eventGraphToUIGraph(allFilesGraph);
+        Graph<org.example.graph.Node, Link> g = EventGraph.eventGraphToUIGraph(eventGraphService.getEventGraph());
         SmartPlacementStrategy strategy = new SmartCircularSortedPlacementStrategy();
         SmartGraphPanel<org.example.graph.Node, Link> graphView = new SmartGraphPanel<>(g, strategy);
 
@@ -164,7 +167,7 @@ public class MainWindow {
 
     public void addService(ActionEvent actionEvent) {
         int number = tableData.size() + 1;
-        allFilesGraph.addNode(new org.example.graph.Node("New_Service_" + number , NodeType.SERVICE, "New_Service_" + number));
+        eventGraphService.addNode(new org.example.graph.Node("New_Service_" + number , NodeType.SERVICE, "New_Service_" + number));
         drawGraph();
         tableData.add(new MyDataModel("New_Service_" + number, "New_Service_" + number, ""));
     }

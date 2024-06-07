@@ -2,12 +2,6 @@
     -fx-background-color: #E6F7FF; /* Updated background color */
 }
 
-.vertex {
-    -fx-stroke-width: 3;
-    -fx-stroke: #FFAEBC; /* Updated vertex stroke color */
-    -fx-stroke-type: inside;
-    -fx-fill: #F8E4FF; /* Updated vertex fill color */
-}
 
 .vertex:hover {
     -fx-stroke-width: 4;
@@ -37,14 +31,16 @@
 /* Custom vertex styles remain the same */
 
 .service {
-    -fx-stroke-width: 5;
-    -fx-stroke: #FF7A5A; /* Updated service stroke color */
+    /*-fx-stroke-width: 5;
+    -fx-stroke: #FF7A5A;  Updated service stroke color
     -fx-stroke-type: inside;
-    -fx-fill: #FFC3A0; /* Updated service fill color */
+    -fx-fill: #FFC3A0;  Updated service fill color
+    */
+    -fx-fill: url("file:/C:/ideaProjects/demojavafx/src/main/resources/org/example/demojavafx/service_label.png");
 }
 
 .topic {
-    -fx-stroke-width: 5;
+    -fx-fill: url("file:/C:/ideaProjects/demojavafx/src/main/resources/org/example/demojavafx/topic_label2.png");
 }
 
 .selectedEvent {

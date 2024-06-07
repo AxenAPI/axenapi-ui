@@ -11,12 +11,15 @@ public class Node {
     private String name;
     private NodeType type;
 
+    private boolean visible;
+
     public Node(String name, NodeType type, String belongsToGraph) {
         this.name = name;
         this.type = type;
         this.id = UUID.randomUUID();
         this.belongsToGraph = new ArrayList<>();
         this.belongsToGraph.add(belongsToGraph);
+        this.visible = true;
     }
 
     public boolean equals(Object o) {
@@ -68,5 +71,13 @@ public class Node {
             this.belongsToGraph = new ArrayList<>();
             this.belongsToGraph.addAll(belongsToGraph);
         }
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

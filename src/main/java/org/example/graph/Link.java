@@ -10,11 +10,14 @@ public class Link {
      private Node to;
      private String what;
 
+     private boolean visible;
+
      public Link(Node from, Node to, String what, String name) {
          this.from = from;
          this.to = to;
          this.what = what;
          this.name = name;
+         this.visible = true;
      }
 
      public boolean equals(Object o) {
@@ -65,5 +68,9 @@ public class Link {
 
     public String getName() {
         return name;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

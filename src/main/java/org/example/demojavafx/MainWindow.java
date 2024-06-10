@@ -39,7 +39,7 @@ public class MainWindow {
     public TableView<MyDataModel> fileInfoTable;
     ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
 
-    private EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
+    private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
 
 
     public void initialize() {

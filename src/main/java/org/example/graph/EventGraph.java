@@ -4,10 +4,7 @@ import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Graph;
 import org.example.util.OpenAPITranslator;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EventGraph {
@@ -58,6 +55,7 @@ public class EventGraph {
             Node node = merged.getNode(n.getName(), n.getType());
             if (node != null) {
                 node.addBelongsToGraph(n.getBelongsToGraph());
+                node.addBelongsToVisibleGraph(n.getBelongsToVisibleGraph());
             } else {
                 merged.addNode(n);
             }
@@ -101,10 +99,9 @@ public class EventGraph {
     }
 
     public void minus(String graphName) {
-        nodes.forEach(node -> node.removeBelongsToGraph(graphName));
-        //nodes.removeIf(node -> node.getBelongsToGraph().isEmpty());
+        nodes.forEach(node -> node.removeBelongsToVisibleGraph(graphName));
         nodes.forEach(node -> {
-            if(node.getBelongsToGraph().isEmpty()) {
+            if(node.getBelongsToVisibleGraph().isEmpty()) {
                 node.setVisible(false);
             }
         });
@@ -114,7 +111,6 @@ public class EventGraph {
                 link.setVisible(false);
             }
         });
-        //links.removeIf(link -> link.getName().equals(graphName));
     }
 
     public EventGraph plus(String filePath) {
@@ -127,6 +123,21 @@ public class EventGraph {
         return nodes.stream()
                 .filter(node -> node.getType() == nodeType)
                 .collect(Collectors.toList());
+    }
+
+    public void makeVisible(String name) {
+        nodes.forEach(node -> {
+            if(node.getBelongsToGraph().contains(name)) {
+                node.setVisible(true);
+                node.addBelongsToVisibleGraph(Collections.singleton(name));
+            }
+        });
+
+        links.forEach(link -> {
+            if(link.getName().equals(name)) {
+                link.setVisible(true);
+            }
+        });
     }
 }
 

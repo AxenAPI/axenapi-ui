@@ -8,6 +8,7 @@ public class Node {
 
     private UUID id;
     private List<String> belongsToGraph;
+    private Set<String> belongsToVisibleGraph;
     private String name;
     private NodeType type;
 
@@ -19,6 +20,10 @@ public class Node {
         this.id = UUID.randomUUID();
         this.belongsToGraph = new ArrayList<>();
         this.belongsToGraph.add(belongsToGraph);
+
+        this.belongsToVisibleGraph = new HashSet<>();
+        this.belongsToVisibleGraph.add(belongsToGraph);
+
         this.visible = true;
     }
 
@@ -65,11 +70,14 @@ public class Node {
     }
 
     public void addBelongsToGraph(List<String> belongsToGraph) {
-        if(this.belongsToGraph != null) {
+        if(this.belongsToGraph != null && this.belongsToVisibleGraph != null) {
             this.belongsToGraph.addAll(belongsToGraph);
+            this.belongsToVisibleGraph.addAll(belongsToGraph);
         } else {
             this.belongsToGraph = new ArrayList<>();
+            this.belongsToVisibleGraph = new HashSet<>();
             this.belongsToGraph.addAll(belongsToGraph);
+            this.belongsToVisibleGraph.addAll(belongsToGraph);
         }
     }
 
@@ -79,5 +87,22 @@ public class Node {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public void removeBelongsToVisibleGraph(String graphName) {
+        belongsToVisibleGraph.remove(graphName);
+    }
+
+    public Set<String> getBelongsToVisibleGraph() {
+        return belongsToVisibleGraph;
+    }
+
+    public void addBelongsToVisibleGraph(Set<String> belongsToVisibleGraph) {
+        if(this.belongsToVisibleGraph != null) {
+            this.belongsToVisibleGraph.addAll(belongsToVisibleGraph);
+        } else {
+            this.belongsToVisibleGraph = new HashSet<>();
+            this.belongsToVisibleGraph.addAll(belongsToVisibleGraph);
+        }
     }
 }

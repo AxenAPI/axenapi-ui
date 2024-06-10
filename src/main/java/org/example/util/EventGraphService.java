@@ -25,4 +25,15 @@ public enum EventGraphService {
     public void addNode(Node node) {
         this.eventGraph.addNode(node);
     }
+
+    public void mergeOrMakeVisibleEventGraph(EventGraph eventGraph) {
+        boolean isInGraph = this.eventGraph.getNodes().stream().anyMatch(node -> node.getBelongsToGraph().contains(eventGraph.getName()));
+
+        if (isInGraph) {
+            this.eventGraph.makeVisible(eventGraph.getName());
+        } else {
+            this.mergeEventGraph(eventGraph);
+        }
+
+    }
 }

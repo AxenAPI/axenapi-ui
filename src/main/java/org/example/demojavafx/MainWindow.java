@@ -63,7 +63,7 @@ public class MainWindow {
                     if (rowData.isSelected()) {
                         System.out.println("Selected: " + rowData.getFileName() + " " + rowData.getTitle());
                         EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(rowData.getAbsolutePath());
-                        eventGraphService.mergeEventGraph(eventGraph);
+                        eventGraphService.mergeOrMakeVisibleEventGraph(eventGraph);
                     } else {
                         System.out.println("Not Selected: " + rowData.getFileName() + " " + rowData.getTitle());
                         eventGraphService.removeEventGraph(rowData.getTitle());

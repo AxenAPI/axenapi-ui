@@ -36,11 +36,11 @@
     -fx-stroke-type: inside;
     -fx-fill: #FFC3A0;  Updated service fill color
     */
-    -fx-fill: url("file:/C:/ideaProjects/axenapi/axenapiui/src/main/resources/org/example/demojavafx/service_label.png");
+    -fx-fill: url("file:microservice.png");
 }
 
 .topic {
-    -fx-fill: url("file:/C:/ideaProjects/axenapi/axenapiui/src/main/resources/org/example/demojavafx/topic_label2.png");
+    -fx-fill: url("file:queue.png");
 }
 
 .selectedEvent {

@@ -38,7 +38,8 @@ public class OpenAPITranslator {
             String[] parts = key.split("/");
             String brokerTypeString = parts[1];
             BrokerType brokerType = BrokerType.fromValue(brokerTypeString);
-            String topic = parts[brokerType == BrokerType.KAFKA ? 3 : 2];
+            // if 4 parts , topic is on 2th index. if 5 topic is the 3d one.
+            String topic = parts.length == 4 ? parts[2] : parts[3];
             brokers.put(topic, brokerType);
             if(brokerType == BrokerType.KAFKA) {
                 consumerGroup.put(topic, parts[2]);

@@ -14,6 +14,7 @@ module org.example.demojavafx {
     requires io.swagger.v3.oas.models;
     requires swagger.parser.v3;
     requires ch.qos.logback.classic;
+    requires io.swagger.v3.core;
 
     opens org.example.demojavafx to javafx.fxml;
     opens org.example.graph to javafx.fxml;

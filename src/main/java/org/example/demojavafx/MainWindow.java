@@ -66,7 +66,7 @@ public class MainWindow {
                         eventGraphService.mergeOrMakeVisibleEventGraph(eventGraph);
                     } else {
                         System.out.println("Not Selected: " + rowData.getFileName() + " " + rowData.getTitle());
-                        eventGraphService.removeEventGraph(rowData.getTitle());
+                        eventGraphService.makeInvisible(rowData.getTitle());
                     }
                     drawGraph();
                 });
@@ -121,7 +121,7 @@ public class MainWindow {
     }
 
     public void exportSpecification(ActionEvent actionEvent) {
-
+        OpenAPITranslator.saveOpenAPISpecification(eventGraphService.getEventGraph(), "C:\\ideaprojects\\axenapi\\axenapiui\\export");
     }
 
     public void drawGraph() {
@@ -167,7 +167,7 @@ public class MainWindow {
 
     public void addService(ActionEvent actionEvent) {
         int number = tableData.size() + 1;
-        eventGraphService.addNode(new org.example.graph.Node("New_Service_" + number , NodeType.SERVICE, "New_Service_" + number));
+        eventGraphService.addNode(new org.example.graph.Node("New_Service_" + number , NodeType.SERVICE, "New_Service_" + number, null));
         drawGraph();
         tableData.add(new MyDataModel("New_Service_" + number, "New_Service_" + number, ""));
     }

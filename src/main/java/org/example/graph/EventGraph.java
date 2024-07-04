@@ -13,7 +13,11 @@ public class EventGraph {
     private Set<Link> links = new HashSet<>();
 
     public void addNode(Node node) {
-        nodes.add(node);
+        boolean add = nodes.add(node);
+        if(!add) {
+            // find node in nodes
+
+        }
     }
 
     public void addLink(Link link) {
@@ -56,6 +60,16 @@ public class EventGraph {
             if (node != null) {
                 node.addBelongsToGraph(n.getBelongsToGraph());
                 node.addBelongsToVisibleGraph(n.getBelongsToVisibleGraph());
+                if(n.getBroker() != null) {
+                    if(n.getBroker() != node.getBroker()) {
+                        // TODO: throw exception
+                        // print warning
+                        System.out.println("Warning: different brokers in node " + n.getName() + ": "
+                                + n.getBroker() + " and "
+                                + node.getBroker());
+                    }
+                    node.setBroker(n.getBroker());
+                }
             } else {
                 merged.addNode(n);
             }
@@ -98,7 +112,7 @@ public class EventGraph {
         return name;
     }
 
-    public void minus(String graphName) {
+    public void makeInvisible(String graphName) {
         nodes.forEach(node -> node.removeBelongsToVisibleGraph(graphName));
         nodes.forEach(node -> {
             if(node.getBelongsToVisibleGraph().isEmpty()) {

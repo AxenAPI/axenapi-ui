@@ -153,5 +153,13 @@ public class EventGraph {
             }
         });
     }
+
+    public Iterable<String> getEventNames() {
+        return links
+                .stream()
+                .map(Link::getWhat)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }
 

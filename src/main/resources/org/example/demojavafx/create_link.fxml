@@ -8,13 +8,17 @@
 
     <Label text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="label"/>
     <ComboBox fx:id="topicComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="comboBox"/>
+    <!--    text box for group (only for consumers) -->
+    <Label text="Group (Consumers only):" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="label"/>
+    <TextField fx:id="groupTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" styleClass="text-field" visible="false"/>
 
     <Label text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="label"/>
     <ComboBox fx:id="serviceComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="comboBox"/>
-
-    <Label text="Select the direction:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="label"/>
-    <ToggleSwitch fx:id="directionToggleSwitch" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="toggle-switch"/>
-
+    <HBox spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+        <Label text="Produce" styleClass="label"/>
+        <ToggleSwitch fx:id="directionToggleSwitch" styleClass="toggle-switch"/>
+        <Label text="Consume" styleClass="label"/>
+    </HBox>
     <Label text="Select event:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="label"/>
     <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
         <ComboBox fx:id="existingEventComboBox" styleClass="comboBox" />

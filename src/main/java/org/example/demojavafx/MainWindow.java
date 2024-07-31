@@ -187,4 +187,11 @@ public class MainWindow {
         }
 
     }
+
+    public void addTopic(ActionEvent actionEvent) {
+        int number = tableData.size() + 1;
+        eventGraphService.addNode(new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, "New_Topic_" + number, null));
+        drawGraph();
+        tableData.add(new MyDataModel("New_Topic_" + number, "New_Topic_" + number, ""));
+    }
 }

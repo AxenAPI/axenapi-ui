@@ -98,4 +98,13 @@ public class Link {
          // todo: set group into link
         return group;
     }
+
+    public Node getNode(NodeType nodeType) {
+        if(from.getType() == nodeType) {
+            return from;
+        } else if (to.getType() == nodeType) {
+            return to;
+        }
+        return null;
+    }
 }

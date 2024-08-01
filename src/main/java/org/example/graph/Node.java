@@ -20,13 +20,12 @@ public class Node {
         this.type = type;
         this.id = UUID.randomUUID();
         this.belongsToGraph = new ArrayList<>();
-        this.belongsToGraph.add(belongsToGraph);
-
         this.belongsToVisibleGraph = new HashSet<>();
-        this.belongsToVisibleGraph.add(belongsToGraph);
-
+        if(belongsToGraph != null) {
+            this.belongsToGraph.add(belongsToGraph);
+            this.belongsToVisibleGraph.add(belongsToGraph);
+        }
         this.visible = true;
-
         this.brokerType = brokerType;
     }
 

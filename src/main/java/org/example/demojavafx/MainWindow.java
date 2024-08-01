@@ -178,9 +178,13 @@ public class MainWindow {
         try {
             Stage stage = new Stage();
             Parent root = null;
-            root = FXMLLoader.load(getClass().getResource("create_link.fxml"));
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("create_link.fxml"));
+            root = loader.load();
             stage.setTitle("Create Link Form");
             stage.setScene(new Scene(root, 600, 400));
+            CreateLink children = loader.getController(); //getting controller of window find_win.fxml
+            children.setParent(this);   //setting parent of the controller-child - this
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -190,8 +194,30 @@ public class MainWindow {
 
     public void addTopic(ActionEvent actionEvent) {
         int number = tableData.size() + 1;
-        eventGraphService.addNode(new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, "New_Topic_" + number, null));
+        eventGraphService.addNode(new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null));
         drawGraph();
         tableData.add(new MyDataModel("New_Topic_" + number, "New_Topic_" + number, ""));
+    }
+
+    public void addEvent(ActionEvent actionEvent) {
+        //open window create_event.fxml
+        try {
+            Stage stage = new Stage();
+            Parent root = null;
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("create_event.fxml"));
+            root = loader.load();
+
+            stage.setTitle("Create Event Form");
+            stage.setScene(new Scene(root, 600, 400));
+
+            CreateEvent children = loader.getController(); //getting controller of window find_win.fxml
+            children.setParent(this);   //setting parent of the controller-child - this
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

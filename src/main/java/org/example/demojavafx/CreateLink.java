@@ -33,6 +33,7 @@ public class CreateLink {
     private String event;
 
     private String group;
+    private MainWindow controller;
 
 
     public void initialize() {
@@ -58,13 +59,21 @@ public class CreateLink {
             //get node topic by name
             Node topicNode = eventGraphService.getEventGraph().getNode(topic, NodeType.TOPIC);
             // get schema from eventGraph by link.what
-            Schema schema = eventGraph.getLinks().
-                    stream().
-                    filter(link -> link.getWhat().equals(event)).
-                    findFirst().get().getSchema();
-            Link link = new Link(serviceNode, topicNode, event, service, schema, topicNode.getBroker(), group);
+            Schema schema = eventGraph.getEdges().get(event);
+            Link link;
+            if(direction) {
+                link = new Link(topicNode, serviceNode, event, service, schema, topicNode.getBroker(), group);
+            } else {
+                link = new Link(serviceNode, topicNode, event, service, schema, topicNode.getBroker(), group);
+            }
             eventGraph.addLink(link);
             eventGraphService.getEventGraph().print();
         }
+
+        controller.drawGraph();
+    }
+
+    public void setParent(MainWindow mainWindow) {
+        this.controller = mainWindow;
     }
 }

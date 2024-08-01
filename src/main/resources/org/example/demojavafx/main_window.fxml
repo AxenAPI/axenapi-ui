@@ -36,6 +36,7 @@
                     <Button text="Choose Files" onAction="#chooseFiles" styleClass="form-button"/>
                     <Button text="Add Service" onAction="#addService" styleClass="form-button"/>
                     <Button text="Add topic(queue)" onAction="#addTopic"    styleClass="form-button"/>
+                    <Button text="Add Event" onAction="#addEvent"    styleClass="form-button"/>
                     <Button text="CreateLink" onAction="#createLink" styleClass="form-button"/>
 
                 </HBox>

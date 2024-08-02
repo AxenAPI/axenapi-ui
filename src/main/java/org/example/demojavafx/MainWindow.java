@@ -62,8 +62,7 @@ public class MainWindow {
 
                     if (rowData.isSelected()) {
                         System.out.println("Selected: " + rowData.getFileName() + " " + rowData.getTitle());
-                        EventGraph eventGraph = OpenAPITranslator.parseOPenAPI(rowData.getAbsolutePath());
-                        eventGraphService.mergeOrMakeVisibleEventGraph(eventGraph);
+                        eventGraphService.makeVisibleEventGraph(rowData.getTitle());
                     } else {
                         System.out.println("Not Selected: " + rowData.getFileName() + " " + rowData.getTitle());
                         eventGraphService.makeInvisible(rowData.getTitle());
@@ -193,10 +192,9 @@ public class MainWindow {
     }
 
     public void addTopic(ActionEvent actionEvent) {
-        int number = tableData.size() + 1;
+        int number = eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).size() + 1;
         eventGraphService.addNode(new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null));
         drawGraph();
-        tableData.add(new MyDataModel("New_Topic_" + number, "New_Topic_" + number, ""));
     }
 
     public void addEvent(ActionEvent actionEvent) {

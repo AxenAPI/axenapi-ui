@@ -40,4 +40,8 @@ public enum EventGraphService {
     public void saveOpenAPISpecification(String filePath) {
         OpenAPITranslator.saveOpenAPISpecification(this.eventGraph, filePath);
     }
+
+    public void makeVisibleEventGraph(String title) {
+        this.eventGraph.makeVisible(title);
+    }
 }

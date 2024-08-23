@@ -6,7 +6,6 @@ module org.example.demojavafx {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires smartgraph;
-    requires com.fasterxml.jackson.core;
     requires org.slf4j;
     requires org.apache.commons.io;
     requires org.apache.commons.lang3;
@@ -14,6 +13,8 @@ module org.example.demojavafx {
     requires io.swagger.v3.oas.models;
     requires swagger.parser.v3;
     requires ch.qos.logback.classic;
+    requires io.swagger.v3.core;
+    requires com.fasterxml.jackson.databind;
 
     opens org.example.demojavafx to javafx.fxml;
     opens org.example.graph to javafx.fxml;

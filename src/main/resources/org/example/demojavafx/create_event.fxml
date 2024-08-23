@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.demojavafx.CreateEvent"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <!-- Event Name Field -->
+        <Label text="Event Name:" layoutX="20.0" layoutY="20.0" />
+        <TextField fx:id="eventNameField" layoutX="120.0" layoutY="20.0" />
+
+        <!-- Text Area -->
+        <TextArea fx:id="eventTextArea" layoutX="20.0" layoutY="60.0" prefHeight="200.0" prefWidth="560.0" />
+
+        <!-- Button "Add Event" -->
+        <Button fx:id="addEventButton"
+                onAction="#addEvent"
+                layoutX="20.0" layoutY="270.0" text="Add Event" />
+    </children>
+</AnchorPane>

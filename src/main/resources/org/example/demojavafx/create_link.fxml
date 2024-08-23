@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" alignment="center"
-          fx:controller="org.example.demojavafx.CreateLink" hgap="10" vgap="10" stylesheets="@link.css">
+<GridPane alignment="center" hgap="10" stylesheets="@link.css" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="org.example.demojavafx.CreateLink">
 
-    <Label text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="label"/>
-    <ComboBox fx:id="topicComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="comboBox"/>
+    <Label styleClass="label" text="Choose a topic:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <ComboBox fx:id="topicComboBox" styleClass="comboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <!--    text box for group (only for consumers) -->
+    <Label styleClass="label" text="Group (Consumers only):" GridPane.rowIndex="4" />
+    <TextField fx:id="groupTextField" styleClass="text-field" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-    <Label text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="label"/>
-    <ComboBox fx:id="serviceComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="comboBox"/>
-
-    <Label text="Select the direction:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="label"/>
-    <ToggleSwitch fx:id="directionToggleSwitch" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="toggle-switch"/>
-
-    <Label text="Select event:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="label"/>
+    <Label styleClass="label" text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <ComboBox fx:id="serviceComboBox" styleClass="comboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <HBox spacing="10" GridPane.columnSpan="2" GridPane.rowIndex="2">
+        <Label styleClass="label" text="Produce" />
+        <ToggleSwitch fx:id="directionToggleSwitch" styleClass="toggle-switch" />
+        <Label styleClass="label" text="Consume" />
+    </HBox>
+    <Label styleClass="label" text="Select event:" GridPane.rowIndex="3" />
     <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
         <ComboBox fx:id="existingEventComboBox" styleClass="comboBox" />
-        <Button text="Create New Event" onAction="#handleNewEvent" styleClass="button" />
     </HBox>
+   <TextField fx:id="groipId" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+     <Button onAction="#handleNewEvent" prefWidth="191.0" styleClass="button" text="Create " GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
 </GridPane>

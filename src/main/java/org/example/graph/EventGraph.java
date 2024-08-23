@@ -2,6 +2,7 @@ package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Graph;
+import io.swagger.v3.oas.models.media.Schema;
 import org.example.util.OpenAPITranslator;
 
 import java.util.*;
@@ -10,14 +11,27 @@ import java.util.stream.Collectors;
 public class EventGraph {
     private String name;
     private Set<Node> nodes = new HashSet<>();
+    private Map<String, Schema> edges = new HashMap<>();
     private Set<Link> links = new HashSet<>();
 
     public void addNode(Node node) {
-        nodes.add(node);
+        boolean add = nodes.add(node);
+        if(!add) {
+            // find node in nodes
+
+        }
     }
 
     public void addLink(Link link) {
+        if(link.getWhat() != null && link.getSchema() != null) {
+            edges.put(link.getWhat(), link.getSchema());
+        }
         links.add(link);
+        // get service from link
+        Node service = link.getNode(NodeType.SERVICE);
+        if(service != null) {
+            link.getNode(NodeType.TOPIC).addBelongsToGraph(service.getBelongsToGraph());
+        }
     }
 
     public boolean containsNode(String name, NodeType type) {
@@ -39,6 +53,10 @@ public class EventGraph {
         System.out.println("Links: " + Arrays.deepToString(links.toArray()));
     }
 
+    public Map<String, Schema> getEdges() {
+        return edges;
+    }
+
     public Set<Link> getLinks() {
         return links;
     }
@@ -56,6 +74,16 @@ public class EventGraph {
             if (node != null) {
                 node.addBelongsToGraph(n.getBelongsToGraph());
                 node.addBelongsToVisibleGraph(n.getBelongsToVisibleGraph());
+                if(n.getBroker() != null) {
+                    if(n.getBroker() != node.getBroker()) {
+                        // TODO: throw exception
+                        // print warning
+                        System.out.println("Warning: different brokers in node " + n.getName() + ": "
+                                + n.getBroker() + " and "
+                                + node.getBroker());
+                    }
+                    node.setBroker(n.getBroker());
+                }
             } else {
                 merged.addNode(n);
             }
@@ -98,7 +126,7 @@ public class EventGraph {
         return name;
     }
 
-    public void minus(String graphName) {
+    public void makeInvisible(String graphName) {
         nodes.forEach(node -> node.removeBelongsToVisibleGraph(graphName));
         nodes.forEach(node -> {
             if(node.getBelongsToVisibleGraph().isEmpty()) {
@@ -138,6 +166,17 @@ public class EventGraph {
                 link.setVisible(true);
             }
         });
+    }
+
+    public Iterable<String> getEventNames() {
+        return edges.keySet();
+    }
+
+    public void addEdge(String name, Schema schema) {
+        if(edges == null) {
+            edges = new HashMap<>();
+        }
+        edges.put(name, schema);
     }
 }
 

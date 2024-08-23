@@ -11,20 +11,22 @@ public class Node {
     private Set<String> belongsToVisibleGraph;
     private String name;
     private NodeType type;
+    private BrokerType brokerType;
 
     private boolean visible;
 
-    public Node(String name, NodeType type, String belongsToGraph) {
+    public Node(String name, NodeType type, String belongsToGraph, BrokerType brokerType) {
         this.name = name;
         this.type = type;
         this.id = UUID.randomUUID();
         this.belongsToGraph = new ArrayList<>();
-        this.belongsToGraph.add(belongsToGraph);
-
         this.belongsToVisibleGraph = new HashSet<>();
-        this.belongsToVisibleGraph.add(belongsToGraph);
-
+        if(belongsToGraph != null) {
+            this.belongsToGraph.add(belongsToGraph);
+            this.belongsToVisibleGraph.add(belongsToGraph);
+        }
         this.visible = true;
+        this.brokerType = brokerType;
     }
 
     public boolean equals(Object o) {
@@ -104,5 +106,13 @@ public class Node {
             this.belongsToVisibleGraph = new HashSet<>();
             this.belongsToVisibleGraph.addAll(belongsToVisibleGraph);
         }
+    }
+
+    public BrokerType getBroker() {
+        return brokerType;
+    }
+
+    public void setBroker(BrokerType broker) {
+        this.brokerType = broker;
     }
 }

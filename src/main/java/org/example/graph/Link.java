@@ -1,6 +1,7 @@
 package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graphview.SmartLabelSource;
+import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.Objects;
 
@@ -8,16 +9,22 @@ public class Link {
     private String name;
      private Node from;
      private Node to;
+     private Schema schema;
      private String what;
+     private BrokerType brokerType;
 
      private boolean visible;
+     private String group;
 
-     public Link(Node from, Node to, String what, String name) {
+    public Link(Node from, Node to, String what, String name, Schema schema, BrokerType brokerType, String group) {
          this.from = from;
          this.to = to;
          this.what = what;
          this.name = name;
          this.visible = true;
+         this.schema = schema;
+         this.brokerType = brokerType;
+         this.group = group;
      }
 
      public boolean equals(Object o) {
@@ -72,5 +79,32 @@ public class Link {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
+    public Schema getSchema() {
+        return schema;
+    }
+
+    public BrokerType getBrokerType() {
+         // todo: set broker into link
+        return brokerType;
+    }
+
+    public String getGroup() {
+         // todo: set group into link
+        return group;
+    }
+
+    public Node getNode(NodeType nodeType) {
+        if(from.getType() == nodeType) {
+            return from;
+        } else if (to.getType() == nodeType) {
+            return to;
+        }
+        return null;
     }
 }

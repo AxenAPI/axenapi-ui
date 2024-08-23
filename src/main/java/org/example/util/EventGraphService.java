@@ -16,8 +16,8 @@ public enum EventGraphService {
         this.eventGraph = EventGraph.merge(this.eventGraph, eventGraph);
     }
 
-    public void removeEventGraph(String graphName) {
-        this.eventGraph.minus(graphName);
+    public void makeInvisible(String graphName) {
+        this.eventGraph.makeInvisible(graphName);
         eventGraph.print();
     }
 
@@ -35,5 +35,13 @@ public enum EventGraphService {
             this.mergeEventGraph(eventGraph);
         }
 
+    }
+
+    public void saveOpenAPISpecification(String filePath) {
+        OpenAPITranslator.saveOpenAPISpecification(this.eventGraph, filePath);
+    }
+
+    public void makeVisibleEventGraph(String title) {
+        this.eventGraph.makeVisible(title);
     }
 }

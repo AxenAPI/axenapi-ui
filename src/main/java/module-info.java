@@ -15,6 +15,7 @@ module org.example.demojavafx {
     requires ch.qos.logback.classic;
     requires io.swagger.v3.core;
     requires com.fasterxml.jackson.databind;
+    requires io.swagger.v3.oas.annotations;
 
     opens org.example.demojavafx to javafx.fxml;
     opens org.example.graph to javafx.fxml;

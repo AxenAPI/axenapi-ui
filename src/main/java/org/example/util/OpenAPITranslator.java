@@ -7,6 +7,8 @@ import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.example.graph.*;
@@ -145,7 +147,6 @@ public class OpenAPITranslator {
                 .forEach(link -> {
                     OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
                     Schema schema = link.getSchema();
-
                     if(openAPI.getComponents() == null) {
                         openAPI.setComponents(new Components());
                     }
@@ -191,13 +192,25 @@ public class OpenAPITranslator {
         requestBody.setRequired(true);
         requestBody.setContent(createContent(schema));
         operation.setRequestBody(requestBody);
+        operation.setResponses(createResponses());
         return operation;
+    }
+
+    private static ApiResponses createResponses() {
+        ApiResponses apiResponses = new ApiResponses();
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setDescription("Success. No content.");
+        apiResponses.addApiResponse("200", apiResponse);
+        return apiResponses;
     }
 
     private static Content createContent(Schema schema) {
         Content content = new Content();
         MediaType mediaType = new MediaType();
-        mediaType.setSchema(schema);
+        Schema ref = new Schema();
+        ref.set$ref("#/components/schemas/" + schema.getName());
+        mediaType.setSchema(ref);
+        mediaType.setSchema(ref);
         content.addMediaType("application/json", mediaType);
         return content;
     }

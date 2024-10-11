@@ -1,21 +1,42 @@
 /* styles.css */
-.form-label {
-    -fx-font-size: 14pt;
+
+/* Add more styles for other elements as needed */
+
+.button {
+    -fx-background-color: #8A2BE2; /* Change button background color to blue violet */
+    -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
     -fx-text-fill: #333333;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
 }
 
-.form-button {
-    -fx-font-size: 12pt;
-    -fx-background-color: #4CAF50; /* Green background */
-    -fx-text-fill: white; /* White text */
-    -fx-padding: 10px 20px; /* Add some padding for better clickability */
-    -fx-background-radius: 5px; /* Rounded corners */
+.text-field:focused {
+    -fx-background-color: #e6e6e6;
 }
 
-.custom-table-view {
-    -fx-background-color: #f2f2f2; /* Light grey background */
+.text-field:hover {
+    -fx-background-color: #e6e6e6;
 }
 
-.table-column {
-    -fx-alignment: CENTER; /* Center align the content in the table columns */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
 }
+
+.combo-box:focused {
+    -fx-background-color: #e6e6e6;
+}
+
+.combo-box:hover {
+    -fx-background-color: #e6e6e6;
+}
+
+/* Add more styles for other elements as needed */

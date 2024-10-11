@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
 <?import java.net.URL?>
-<?import javafx.scene.SubScene?>
-<?import javafx.collections.ObservableList?>
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.demojavafx.MainWindow">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="533.0" prefWidth="551.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demojavafx.MainWindow">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
     <top>
-        <MenuBar>
+        <MenuBar prefHeight="10.0" prefWidth="519.0">
             <Menu text="File">
                 <!-- Add file options here -->
             </Menu>
@@ -29,36 +33,43 @@
         </MenuBar>
     </top>
     <center>
-        <SplitPane>
-            <VBox alignment="CENTER" spacing="10">
-                <Label text="Choose files to be used to draw the event graph" styleClass="form-label" />
-                <HBox alignment="CENTER" spacing="10">
-                    <VBox alignment="CENTER" spacing="10">
-                        <Button text="Choose Files" onAction="#chooseFiles" styleClass="form-button"/>
-                        <Button text="Add Service" onAction="#addService" styleClass="form-button"/>
-                    </VBox>
-                    <VBox alignment="CENTER" spacing="10">
-                        <Button text="Add topic(queue)" onAction="#addTopic" styleClass="form-button"/>
-                        <Button text="Add Event" onAction="#addEvent" styleClass="form-button"/>
-                        <Button text="CreateLink" onAction="#createLink" styleClass="form-button"/>
-                    </VBox>
-                </HBox>
-                <TableView fx:id="fileInfoTable" styleClass="custom-table-view">
-                    <columns>
-                        <TableColumn text="File Name" styleClass="table-column"/>
-                        <TableColumn text="Title" styleClass="table-column"/>
-                        <TableColumn text="Select" styleClass="table-column"/>
-                    </columns>
-                </TableView>
-                <Button text="Export Specification" onAction="#exportSpecification" styleClass="form-button"/>
-            </VBox>
+        <SplitPane dividerPositions="0.5">
+         <GridPane>
+           <columnConstraints>
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+             <RowConstraints vgrow="SOMETIMES" />
+             <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="0.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+                   <TableView fx:id="fileInfoTable" styleClass="custom-table-view" GridPane.rowIndex="1">
+                       <columns>
+                           <TableColumn styleClass="table-column" text="File Name" />
+                           <TableColumn styleClass="table-column" text="Title" />
+                           <TableColumn styleClass="table-column" text="Select" />
+                       </columns>
+                   </TableView>
+               <ToolBar prefHeight="38.0" prefWidth="255.0">
+                  <items>
+                     <Button onAction="#chooseFiles" styleClass="form-button" text="Import File" />
+                     <Button onAction="#addService" styleClass="form-button" text="Add Service" />
+                           <Button onAction="#addEvent" styleClass="form-button" text="Add Event" />
+                           <Button onAction="#addTopic" styleClass="form-button" text="Add topic" />
+                           <Button onAction="#createLink" styleClass="form-button" text="Add Link" />
+                  </items>
+               </ToolBar>
+                   <Button onAction="#exportSpecification" styleClass="form-button" text="Export Specification" GridPane.rowIndex="2" />
+            </children>
+         </GridPane>
             <StackPane fx:id="pane">
                 <VBox alignment="BOTTOM_RIGHT" spacing="10" styleClass="zoom-panel">
-                    <Slider fx:id="zoomSlider" min="1.0" max="5.0" value="1.0" showTickLabels="true" showTickMarks="true" orientation="VERTICAL" />
+                    <Slider fx:id="zoomSlider" max="5.0" min="1.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" value="1.0" />
                     <Button onAction="#resetZoom" styleClass="reset-button">
                         <graphic>
-                            <ImageView fitWidth="20" fitHeight="20">
-                                <Image url="@reset-icon.png"/>
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@reset-icon.png" />
                             </ImageView>
                         </graphic>
                     </Button>

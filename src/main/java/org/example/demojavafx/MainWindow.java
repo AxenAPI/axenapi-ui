@@ -9,16 +9,17 @@ import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class MainWindow {
 
@@ -44,11 +46,44 @@ public class MainWindow {
 
     public void initialize() {
         fileInfoTable.setItems(tableData);
-        TableColumn<MyDataModel, ?> column1 = fileInfoTable.getVisibleLeafColumn(0);
-        column1.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-        TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(1);
+        TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(0);
         column2.setCellValueFactory(new PropertyValueFactory<>("title"));
         TableColumn<MyDataModel, Boolean> selectColumn = new TableColumn<>("Select");
+        TableColumn<MyDataModel, Boolean> deleteColumn = new TableColumn<>("Delete");
+
+        deleteColumn.setCellFactory(column -> new TableCell<>() {
+            private final Button deleteButton = new Button();
+            {
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("delete.png")));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitHeight(20);
+                imageView.setFitWidth(20);
+                deleteButton.setGraphic(imageView);
+                // set button size as table cell
+                deleteButton.setMaxSize(20,20);
+            }
+
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                    deleteButton.setOnAction(actionEvent -> {
+                        // get service name
+                        MyDataModel rowData = getTableView().getItems().get(getIndex());
+                        String serviceName = rowData.getTitle();
+                        System.out.println("serviceName =" + serviceName);
+                        eventGraphService.deleteService(serviceName);
+                        getTableView().getItems().remove(getIndex());
+                        getTableView().refresh();
+                        drawGraph();
+                    });
+                }
+            }
+
+        });
 
         selectColumn.setCellFactory(column -> new TableCell<>() {
             private final CheckBox checkBox = new CheckBox();
@@ -57,14 +92,9 @@ public class MainWindow {
                 checkBox.setOnAction(event -> {
                     MyDataModel rowData = getTableView().getItems().get(getIndex());
                     rowData.setSelected(checkBox.isSelected());
-                    System.out.println("Selected: " + rowData.getFileName() + rowData.getTitle() + " " +
-                            String.valueOf(rowData.isSelected()));
-
                     if (rowData.isSelected()) {
-                        System.out.println("Selected: " + rowData.getFileName() + " " + rowData.getTitle());
                         eventGraphService.makeVisibleEventGraph(rowData.getTitle());
                     } else {
-                        System.out.println("Not Selected: " + rowData.getFileName() + " " + rowData.getTitle());
                         eventGraphService.makeInvisible(rowData.getTitle());
                     }
                     drawGraph();
@@ -84,6 +114,7 @@ public class MainWindow {
         });
 
         fileInfoTable.getColumns().add(selectColumn);
+        fileInfoTable.getColumns().add(deleteColumn);
 
     }
 

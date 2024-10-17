@@ -44,4 +44,8 @@ public enum EventGraphService {
     public void makeVisibleEventGraph(String title) {
         this.eventGraph.makeVisible(title);
     }
+
+    public void deleteService(String serviceName) {
+        this.eventGraph.deleteService(serviceName);
+    }
 }

@@ -46,9 +46,7 @@
             <children>
                    <TableView fx:id="fileInfoTable" styleClass="custom-table-view" GridPane.rowIndex="1">
                        <columns>
-                           <TableColumn styleClass="table-column" text="File Name" />
                            <TableColumn styleClass="table-column" text="Title" />
-                           <TableColumn styleClass="table-column" text="Select" />
                        </columns>
                    </TableView>
                <ToolBar prefHeight="38.0" prefWidth="255.0">
@@ -60,7 +58,14 @@
                            <Button onAction="#createLink" styleClass="form-button" text="Add Link" />
                   </items>
                </ToolBar>
-                   <Button onAction="#exportSpecification" styleClass="form-button" text="Export Specification" GridPane.rowIndex="2" />
+               <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="2">
+                 <items>
+                     <Button mnemonicParsing="false" text="Export Code" />
+                   <Button mnemonicParsing="false" text="Button" />
+                         <Button onAction="#exportSpecification" styleClass="form-button" text="Export Specification" />
+                     <Button mnemonicParsing="false" text="Delete All" />
+                 </items>
+               </ToolBar>
             </children>
          </GridPane>
             <StackPane fx:id="pane">

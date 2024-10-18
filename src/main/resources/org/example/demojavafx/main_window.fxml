@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="533.0" prefWidth="551.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demojavafx.MainWindow">
+<BorderPane prefHeight="533.0" prefWidth="551.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demojavafx.MainWindow">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
@@ -53,6 +40,7 @@
                   <items>
                      <Button onAction="#chooseFiles" styleClass="form-button" text="Import File" />
                      <Button onAction="#addService" styleClass="form-button" text="Add Service" />
+                     <Button onAction="#addBroker" styleClass="form-button" text="Add Broker" />
                            <Button onAction="#addEvent" styleClass="form-button" text="Add Event" />
                            <Button onAction="#addTopic" styleClass="form-button" text="Add topic" />
                            <Button onAction="#createLink" styleClass="form-button" text="Add Link" />
@@ -63,7 +51,7 @@
                      <Button mnemonicParsing="false" text="Export Code" />
                    <Button mnemonicParsing="false" text="Button" />
                          <Button onAction="#exportSpecification" styleClass="form-button" text="Export Specification" />
-                     <Button mnemonicParsing="false" text="Delete All" />
+                     <Button mnemonicParsing="false" text="Clear" onAction="#clearGraph" />
                  </items>
                </ToolBar>
             </children>

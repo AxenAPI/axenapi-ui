@@ -249,4 +249,31 @@ public class MainWindow {
         }
 
     }
+
+    public void clearGraph(ActionEvent actionEvent) {
+        eventGraphService.clear();
+        tableData.clear();
+        drawGraph();
+    }
+
+    public void addBroker(ActionEvent actionEvent) {
+        //open window create_broker.fxml
+        try {
+            Stage stage = new Stage();
+            Parent root = null;
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("broker_list.fxml"));
+            root = loader.load();
+
+            stage.setTitle("Create Broker Form");
+            stage.setScene(new Scene(root, 600, 400));
+
+            BrokerListController children = loader.getController(); //getting controller of window find_win.fxml
+            children.setParent(this);   //setting parent of the controller-child - this
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

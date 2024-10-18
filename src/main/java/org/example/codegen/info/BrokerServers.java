@@ -110,7 +110,14 @@ public enum BrokerServers implements KafkaServersDAO {
     }
 
     public void saveOrUpdate(BrokerServer brokerServer) throws IOException {
-        if(!brokerServers.contains(brokerServer)) {
+        boolean newBroker = true;
+        for (BrokerServer b : brokerServers) {
+            if (b.getId() == brokerServer.getId()) {
+                newBroker = false;
+                break;
+            }
+        }
+        if(newBroker) {
             this.addKafkaServer(brokerServer);
         } else {
             this.update(brokerServer);

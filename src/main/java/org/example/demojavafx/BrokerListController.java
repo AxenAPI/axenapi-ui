@@ -17,7 +17,7 @@ import java.util.Objects;
 public class BrokerListController {
     public TableView<BrokerServer> brokerTable;
     ObservableList<BrokerServer> tableData = FXCollections.observableArrayList();
-    BrokerServers brokerServers = BrokerServers.KAFKA_SERVERS;
+    BrokerServers brokerServers = BrokerServers.BROKER_SERVERS;
     private MainWindow parent;
 
     public void initialize() {
@@ -34,6 +34,10 @@ public class BrokerListController {
         column1.setEditable(true);
         column2.setEditable(true);
         column3.setEditable(true);
+
+        column1.setResizable(true);
+        column2.setResizable(true);
+        column3.setResizable(true);
 
         // make column1 editable
         column1.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -112,6 +116,7 @@ public class BrokerListController {
             }
         });
         brokerTable.getColumns().add(deleteColumn);
+        brokerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
     public void setParent(MainWindow mainWindow) {
@@ -120,7 +125,7 @@ public class BrokerListController {
 
     public void addBroker(ActionEvent actionEvent) throws IOException {
         int size = tableData.size();
-        BrokerServer brokerServer = new BrokerServer("New_Broker", "localhost:9092" + size, "kafka", size);
+        BrokerServer brokerServer = new BrokerServer("New_Broker", "localhost:909" + (2 + size), "kafka", size);
         tableData.add(brokerServer);
         brokerTable.refresh();
         brokerServers.addKafkaServer(brokerServer);

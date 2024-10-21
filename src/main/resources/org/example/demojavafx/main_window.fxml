@@ -48,8 +48,8 @@
                </ToolBar>
                <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="2">
                  <items>
-                     <Button mnemonicParsing="false" text="Export Code" />
-                   <Button mnemonicParsing="false" text="Button" />
+                     <Button mnemonicParsing="false" onAction="#exportCode" styleClass="form-button" text="Export Code" />
+
                          <Button onAction="#exportSpecification" styleClass="form-button" text="Export Specification" />
                      <Button mnemonicParsing="false" text="Clear" onAction="#clearGraph" />
                  </items>

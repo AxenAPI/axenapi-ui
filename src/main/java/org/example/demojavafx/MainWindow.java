@@ -276,4 +276,23 @@ public class MainWindow {
             throw new RuntimeException(e);
         }
     }
+
+    public void exportCode(ActionEvent actionEvent) {
+        //open window create_broker.fxml
+        try {
+            Stage stage = new Stage();
+            Parent root = null;
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("create_code.fxml"));
+            root = loader.load();
+            stage.setTitle("Create Code Form");
+            stage.setScene(new Scene(root, 600, 400));
+            CreateCodeController children = loader.getController(); //getting controller of window find_win.fxml
+            children.setParent(this);   //setting parent of the controller-child - this
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

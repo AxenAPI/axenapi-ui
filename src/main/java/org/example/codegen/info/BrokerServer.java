@@ -32,4 +32,10 @@ public class BrokerServer {
         return Objects.hashCode(address);
     }
 
+
+    @Override
+    public String toString() {
+        return name + ":" + address;
+    }
+
 }

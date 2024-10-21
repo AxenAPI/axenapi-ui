@@ -1,7 +1,5 @@
 package org.example.codegen.info;
 
-import javafx.event.ActionEvent;
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.HashSet;
@@ -9,7 +7,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public enum BrokerServers implements KafkaServersDAO {
-    KAFKA_SERVERS;
+    BROKER_SERVERS;
     private final File kafkaServersFile;
     private final Set<BrokerServer> brokerServers;
 

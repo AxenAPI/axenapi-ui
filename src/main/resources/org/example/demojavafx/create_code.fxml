@@ -4,8 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane id="borderPane" prefHeight="533.0" prefWidth="551.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="org.example.demojavafx.BrokerListController">
+<BorderPane id="borderPane" prefHeight="533.0" prefWidth="551.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demojavafx.CreateCodeController">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
@@ -21,17 +20,11 @@ fx:controller="org.example.demojavafx.BrokerListController">
              <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="0.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-                   <TableView fx:id="brokerTable" styleClass="custom-table-view" GridPane.rowIndex="1">
-                       <columns>
-                           <TableColumn styleClass="table-column" text="Name" />
-                           <TableColumn styleClass="table-column" text="Type" />
-                           <TableColumn styleClass="table-column" text="Address" />
-                       </columns>
+                   <TableView fx:id="serviceTable" styleClass="custom-table-view" GridPane.rowIndex="1">
                    </TableView>
-               <ToolBar prefHeight="38.0" prefWidth="255.0">
+               <ToolBar prefHeight="38.0" prefWidth="255.0" GridPane.rowIndex="2">
                   <items>
-                     <Button onAction="#addBroker" styleClass="form-button" text="Add Broker" />
-                     <Button onAction="#clearAll" styleClass="form-button" text="Clear All" />
+                     <Button onAction="#generateCode" styleClass="form-button" text="Generate code" />
                   </items>
                </ToolBar>
             </children>

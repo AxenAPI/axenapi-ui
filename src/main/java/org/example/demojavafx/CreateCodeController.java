@@ -1,11 +1,13 @@
 package org.example.demojavafx;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import org.example.codegen.info.BrokerServer;
 import org.example.codegen.info.BrokerServers;
@@ -26,7 +28,8 @@ public class CreateCodeController {
     public List<Node> selectedServiceList = new ArrayList<>();
     private MainWindow parent;
     Map<Node, BrokerServer> brokerServerMap = new HashMap<>();
-    Map<Node, Integer> portMap = new HashMap<>();
+    Map<Node, String> portMap = new HashMap<>();
+
 
     public void initialize() {
         // table: name, port, choose broker
@@ -40,10 +43,25 @@ public class CreateCodeController {
         TableColumn<Node, BrokerServer> broker = new TableColumn<>("Broker");
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         serviceTable.setEditable(true);
-        TableColumn<Node, Integer> port = new TableColumn<>("Port");
+        TableColumn<Node, String> port = new TableColumn<>("Port");
+//        port.setCellValueFactory(new PropertyValueFactory<>("port"));
         port.setEditable(true);
+        port.setCellFactory(TextFieldTableCell.forTableColumn());
+        port.setCellValueFactory(data -> {
+            Callback<TableColumn<Object, String>, TableCell<Object, String>> tableColumnTableCellCallback = TextFieldTableCell.forTableColumn();
+            if (data.getValue() != null) {
+                // get index of data
+                int index = serviceList.indexOf(data.getValue());
+                String portString = "808" + index;
+                portMap.put(data.getValue(), portString);
+                return new SimpleStringProperty(portString);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+
         port.setOnEditCommit(
-                (TableColumn.CellEditEvent<Node, Integer> event) -> {
+                (TableColumn.CellEditEvent<Node, String> event) -> {
                     Node node = event.getTableView().getItems().get(event.getTablePosition().getRow());
                     portMap.put(node, event.getNewValue());
         });
@@ -72,12 +90,14 @@ public class CreateCodeController {
                 }
             }
         });
+        Set<BrokerServer> brokers = brokerServers.getBrokerServers();
+        servises.forEach(node -> brokerServerMap.put(node, brokers.iterator().next()));
         // set select from list.
         broker.setCellFactory(column -> new TableCell<>() {
             private final ComboBox<BrokerServer> comboBox = new ComboBox<>();
             {
-                Set<BrokerServer> brokers = brokerServers.getBrokerServers();
                 comboBox.getItems().addAll(brokers);
+                // set default value
                 comboBox.setOnAction(event -> {
                     Node node = getTableView().getItems().get(getIndex());
                     brokerServerMap.put(node, comboBox.getValue());
@@ -90,7 +110,7 @@ public class CreateCodeController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    comboBox.getSelectionModel().select(item);
+                    comboBox.getSelectionModel().selectFirst();
                     setGraphic(comboBox);
                 }
             }
@@ -99,6 +119,7 @@ public class CreateCodeController {
         serviceTable.getColumns().add(selectColumn);
         serviceTable.getColumns().add(port);
         serviceTable.getColumns().add(broker);
+        serviceTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
     public void generateCode(ActionEvent actionEvent) {

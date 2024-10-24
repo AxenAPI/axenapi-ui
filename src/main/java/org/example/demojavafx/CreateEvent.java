@@ -26,11 +26,16 @@ public class CreateEvent {
     public void addEvent(ActionEvent actionEvent) throws JsonProcessingException {
         // get text from text field
         String name = eventNameField.getText();
+        if(!name.isEmpty()){
+            // 0 to upperCase
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        }
         // get text from text area
         String text = eventTextArea.getText();
         // text into JsonNode
         JsonNode node = Json.mapper().readTree(text);
         Schema schema = deserializeObjectSchema(node);
+
         schema.setName(name);
         EventGraphService.EVENT_GRAPH_SERVICE.getEventGraph().addEdge(name, schema);
         controller.drawGraph();

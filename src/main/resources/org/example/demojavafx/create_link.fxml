@@ -14,7 +14,7 @@
     <ComboBox fx:id="topicComboBox" styleClass="comboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" />
     <!--    text box for group (only for consumers) -->
     <Label styleClass="label" text="Group (Consumers only):" GridPane.rowIndex="4" />
-    <TextField fx:id="groupTextField" styleClass="text-field" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+    <TextField fx:id="groupTextField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
     <Label styleClass="label" text="Choose a service:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
     <ComboBox fx:id="serviceComboBox" styleClass="comboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -23,11 +23,21 @@
         <ToggleSwitch fx:id="directionToggleSwitch" styleClass="toggle-switch" />
         <Label styleClass="label" text="Consume" />
     </HBox>
+
     <Label styleClass="label" text="Select event:" GridPane.rowIndex="3" />
     <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
         <ComboBox fx:id="existingEventComboBox" styleClass="comboBox" />
     </HBox>
-   <TextField fx:id="groipId" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-     <Button onAction="#handleNewEvent" prefWidth="191.0" styleClass="button" text="Create " GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+
+
+   <Label styleClass="label" text="Broker name" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+   <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5"  >
+           <ComboBox fx:id="brokerComboBox" styleClass="comboBox" onAction="#handleBrokerSelection" />
+   </HBox>
+
+   <Button onAction="#handleNewEvent" prefWidth="191.0" styleClass="button" text="Create " GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+
 
 </GridPane>

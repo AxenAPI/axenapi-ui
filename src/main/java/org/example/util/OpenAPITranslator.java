@@ -218,9 +218,11 @@ public class OpenAPITranslator {
     private static OpenAPI createOpenAPI(Node node) {
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info();
+        info.setVersion("1.0.0"); // TODO get version
         info.setTitle(node.getName());
         info.setDescription("axenapi Specification for " + node.getName());
         openAPI.setInfo(info);
+        openAPI.setPaths(new Paths());
         return openAPI;
     }
 }

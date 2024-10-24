@@ -13,7 +13,7 @@ import org.example.codegen.info.BrokerServer;
 import org.example.codegen.info.BrokerServers;
 import org.example.graph.Node;
 import org.example.graph.NodeType;
-import org.example.util.EventGraphService;
+import org.example.util.*;
 
 import java.util.*;
 
@@ -21,6 +21,7 @@ public class CreateCodeController {
 
     EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
     BrokerServers brokerServers = BrokerServers.BROKER_SERVERS;
+    CodeGenerator codeGenerator = CodeGeneratorImpl.INSTANCE;
 
     //table
     public TableView<Node> serviceTable;
@@ -35,6 +36,7 @@ public class CreateCodeController {
         // table: name, port, choose broker
         List<Node> servises = eventGraphService.getEventGraph()
                 .getNodesByType(NodeType.SERVICE);
+        selectedServiceList.addAll(servises);
         serviceTable.setItems(serviceList);
         serviceList.addAll(servises);
         TableColumn<Node, String> name = new TableColumn<>("Name");
@@ -123,7 +125,25 @@ public class CreateCodeController {
     }
 
     public void generateCode(ActionEvent actionEvent) {
-return;
+        List<ServiceInfo> serviceInfoList = new ArrayList<>();
+        String specDir = "C:\\ideaprojects\\axenapi\\axenapiui\\export";
+        OpenAPITranslator
+                .saveOpenAPISpecification
+                        (eventGraphService.getEventGraph(), specDir);
+
+        selectedServiceList.forEach(service -> {
+            String port = portMap.get(service);
+            String broker = brokerServerMap.get(service).getAddress();
+            String name = service.getName();
+            ServiceInfo.ServiceInfoBuilder builder = ServiceInfo.builder();
+            String specPath = specDir + "\\" + name + ".json";
+            builder.brokerAddress(broker);
+            builder.name(name);
+            builder.port(port);
+            builder.specificationPath(specPath);
+            serviceInfoList.add(builder.build());
+        });
+        codeGenerator.generateCode(serviceInfoList);
     }
 
     public void setParent(MainWindow mainWindow) {

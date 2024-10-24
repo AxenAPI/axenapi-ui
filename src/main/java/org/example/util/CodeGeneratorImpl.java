@@ -18,7 +18,7 @@ public enum CodeGeneratorImpl implements CodeGenerator {
     public boolean generateCode(List<ServiceInfo> serviceInfoList) {
         //$ java -cp "axenapi-generator-2.0.0.jar;openapi-generator-cli.jar" org.openapitools.codegen.OpenAPIGenerator generate -g messageBroker -o out/ -i api-docs.json --additional-properties=kafkaBootstrap=localhost:29092
         serviceInfoList.forEach(serviceInfo -> {
-            String outputDir = "C:\\ideaprojects\\axenapi\\axenapiui\\out\\" + serviceInfo.getName();
+            String outputDir = "C:\\ideaprojects\\demo_out\\" + serviceInfo.getName();
             //create output dir
 
             boolean mkdirs = new File(outputDir).mkdirs();
@@ -33,7 +33,9 @@ public enum CodeGeneratorImpl implements CodeGenerator {
                     .append("--additional-properties=kafkaBootstrap=")
                     .append(serviceInfo.getBrokerAddress())
                     .append(",port=")
-                    .append(serviceInfo.getPort());
+                    .append(serviceInfo.getPort())
+                    .append(",useGradle=true")
+                    .append(",artifactId=").append(serviceInfo.getName());
             String cmdStr = cmd.toString();
             System.out.println(cmdStr);
             BufferedReader reader;

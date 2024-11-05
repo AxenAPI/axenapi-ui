@@ -3,6 +3,9 @@ package org.example.util;
 import org.example.graph.EventGraph;
 import org.example.graph.Node;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum EventGraphService {
     EVENT_GRAPH_SERVICE;
 
@@ -43,5 +46,13 @@ public enum EventGraphService {
 
     public void makeVisibleEventGraph(String title) {
         this.eventGraph.makeVisible(title);
+    }
+
+    public void deleteService(String serviceName) {
+        this.eventGraph.deleteService(serviceName);
+    }
+
+    public void clear() {
+        eventGraph = new EventGraph();
     }
 }

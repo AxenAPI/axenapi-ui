@@ -178,5 +178,11 @@ public class EventGraph {
         }
         edges.put(name, schema);
     }
+
+    public void deleteService(String graphName) {
+        nodes.forEach(node -> node.removeBelongsToVisibleGraph(graphName));
+        nodes.removeIf(node -> node.getBelongsToVisibleGraph().isEmpty());
+        links.removeIf(link -> link.getName().equals(graphName));
+    }
 }
 

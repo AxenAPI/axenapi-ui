@@ -15,12 +15,16 @@ module org.example.demojavafx {
     requires ch.qos.logback.classic;
     requires io.swagger.v3.core;
     requires com.fasterxml.jackson.databind;
+    requires io.swagger.v3.oas.annotations;
+    requires java.desktop;
+    requires static lombok;
 
     opens org.example.demojavafx to javafx.fxml;
     opens org.example.graph to javafx.fxml;
     exports org.example.demojavafx;
     exports org.example.util;
     exports org.example.graph;
+    exports org.example.codegen.info;
     opens org.example.util to javafx.fxml;
 
 }

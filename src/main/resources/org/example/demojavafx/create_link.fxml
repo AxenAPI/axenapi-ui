@@ -36,6 +36,8 @@
            <ComboBox fx:id="brokerComboBox" styleClass="comboBox" onAction="#handleBrokerSelection" />
    </HBox>
 
+   <fx:include href="chooseBrokerElement.fxml" />
+
    <Button onAction="#handleNewEvent" prefWidth="191.0" styleClass="button" text="Create " GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
 

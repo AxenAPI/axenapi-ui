@@ -2,17 +2,27 @@ package org.example.demojavafx;
 
 import io.swagger.v3.oas.models.media.Schema;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.example.codegen.info.BrokerServer;
 import org.example.codegen.info.BrokerServers;
+import org.example.demojavafx.markers.BrokerServerRequire;
 import org.example.graph.*;
 import org.example.util.EventGraphService;
 
-public class CreateLink {
+import java.io.IOException;
+
+public class CreateLink implements BrokerServerRequire {
+    @FXML
+    private VBox brokerChooser;
+
+    private BrokerServer brokerServer;
+
     private final EventGraphService eventGraphService  = EventGraphService.EVENT_GRAPH_SERVICE;;
-    private final BrokerServers brokerServers = BrokerServers.BROKER_SERVERS;
 
     public ComboBox topicComboBox;
 
@@ -34,14 +44,13 @@ public class CreateLink {
 
     private String group;
 
-    private BrokerServer brokerServer;
-
     private MainWindow controller;
 
-    public ComboBox<BrokerServer> brokerComboBox;
     private BrokerType type;
 
-    public void initialize() {
+    public void initialize() throws IOException {
+        FXMLLoader childLoader = new FXMLLoader(getClass().getResource("chooseBrokerElement.fxml"));
+        brokerChooser = childLoader.load();
         addElementsIntoComboBoxes();
     }
     public void addElementsIntoComboBoxes() {
@@ -49,7 +58,6 @@ public class CreateLink {
         eventGraph.getNodesByType(NodeType.TOPIC).forEach(topic -> topicComboBox.getItems().add(topic.getName()));
         eventGraph.getNodesByType(NodeType.SERVICE).forEach(service -> serviceComboBox.getItems().add(service.getName()));
         eventGraph.getEventNames().forEach(event -> existingEventComboBox.getItems().add(event));
-        brokerServers.getBrokerServers().forEach(broker -> brokerComboBox.getItems().add(broker));
     }
 
     public void handleNewEvent(ActionEvent actionEvent) {
@@ -86,8 +94,9 @@ public class CreateLink {
         this.controller = mainWindow;
     }
 
-    public void handleBrokerSelection(ActionEvent actionEvent) {
-        brokerServer = brokerComboBox.getValue();
+    @Override
+    public void setBrokerServer(BrokerServer brokerServer) {
+        this.brokerServer = brokerServer;
         type = BrokerType.KAFKA;
         if(brokerServer.getType().equals("kafka")) {
             type = BrokerType.KAFKA;
@@ -96,5 +105,6 @@ public class CreateLink {
         } else if(brokerServer.getType().equals("rabbit")) {
             type = BrokerType.RABBITMQ;
         }
+
     }
 }

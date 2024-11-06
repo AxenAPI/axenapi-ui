@@ -29,17 +29,8 @@
         <ComboBox fx:id="existingEventComboBox" styleClass="comboBox" />
     </HBox>
 
-
-
    <Label styleClass="label" text="Broker name" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-   <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5"  >
-           <ComboBox fx:id="brokerComboBox" styleClass="comboBox" onAction="#handleBrokerSelection" />
-   </HBox>
-
-   <fx:include href="chooseBrokerElement.fxml" />
+   <fx:include fx:id="brokerChooser" source="chooseBrokerElement.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
    <Button onAction="#handleNewEvent" prefWidth="191.0" styleClass="button" text="Create " GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
-
-
 </GridPane>

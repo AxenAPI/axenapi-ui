@@ -1,0 +1,53 @@
+Subject: [PATCH] change scrolling and min size
+---
+Index: src/main/java/org/example/demojavafx/HelloApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/example/demojavafx/HelloApplication.java b/src/main/java/org/example/demojavafx/HelloApplication.java
+--- a/src/main/java/org/example/demojavafx/HelloApplication.java	(revision c27679e07fdef3f0a2caf51d51c370575c14554d)
++++ b/src/main/java/org/example/demojavafx/HelloApplication.java	(date 1730903703138)
+@@ -10,6 +10,8 @@
+ import javafx.application.Application;
+ import javafx.fxml.FXMLLoader;
+ import javafx.scene.Scene;
++import javafx.scene.control.ScrollPane;
++import javafx.scene.layout.VBox;
+ import javafx.stage.Stage;
+ import javafx.stage.StageStyle;
+ import org.example.graph.EventGraph;
+@@ -32,7 +34,15 @@
+         logger.info("JavaFX application started.");
+ 
+         FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("main_window.fxml"));
+-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
++
++        VBox content = new VBox(1);
++        content.getChildren().add(fxmlLoader.load());
++        ScrollPane scrollPane = new ScrollPane(content);
++
++        scrollPane.setFitToWidth(true);
++        scrollPane.setFitToHeight(true);
++
++        Scene scene = new Scene(scrollPane, 320, 240);
+ 
+         stage.setTitle("Hello!");
+         stage.setScene(scene);
+Index: src/main/resources/org/example/demojavafx/main_window.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/org/example/demojavafx/main_window.fxml b/src/main/resources/org/example/demojavafx/main_window.fxml
+--- a/src/main/resources/org/example/demojavafx/main_window.fxml	(revision c27679e07fdef3f0a2caf51d51c370575c14554d)
++++ b/src/main/resources/org/example/demojavafx/main_window.fxml	(date 1730904527204)
+@@ -23,7 +23,7 @@
+         <SplitPane dividerPositions="0.5">
+          <GridPane>
+            <columnConstraints>
+-             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
++             <ColumnConstraints hgrow="SOMETIMES" minWidth="300.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+              <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />

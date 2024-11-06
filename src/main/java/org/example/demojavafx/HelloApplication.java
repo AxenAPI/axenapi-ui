@@ -10,6 +10,8 @@ import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.example.graph.EventGraph;
@@ -32,7 +34,15 @@ public class HelloApplication extends Application {
         logger.info("JavaFX application started.");
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("main_window.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+
+        VBox content = new VBox(1);
+        content.getChildren().add(fxmlLoader.load());
+        ScrollPane scrollPane = new ScrollPane(content);
+
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+
+        Scene scene = new Scene(scrollPane, 320, 240);
 
         stage.setTitle("Hello!");
         stage.setScene(scene);

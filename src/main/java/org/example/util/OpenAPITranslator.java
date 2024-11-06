@@ -41,7 +41,7 @@ public class OpenAPITranslator {
             String brokerTypeString = parts[1];
             BrokerType brokerType = BrokerType.fromValue(brokerTypeString);
             // if 4 parts , topic is on 2th index. if 5 topic is the 3d one.
-            String topic = parts.length == 4 ? parts[2] : parts[3];
+            String topic = parts[parts.length - 2];
             brokers.put(topic, brokerType);
             if(brokerType == BrokerType.KAFKA) {
                 consumerGroup.put(topic, parts[2]);
@@ -97,9 +97,8 @@ public class OpenAPITranslator {
     }
 
     public static void saveOpenAPISpecification(EventGraph eventGraph, String folderPath) {
-        Map<String, OpenAPI> openAPIMap;
         // create info  for each openAPI specification by nodes with type SERVICE
-        openAPIMap = eventGraph.getNodes().stream()
+        Map<String, OpenAPI> openAPIMap = eventGraph.getNodes().stream()
                 .filter(node -> node.getType() == NodeType.SERVICE)
                 .collect(
                         HashMap::new,
@@ -110,55 +109,25 @@ public class OpenAPITranslator {
         // Each operation has a schema (schema is in the link).
         // format of url: /kafka/{group}/{topic}/{modelName} method post.
         // body schema: schema
-        eventGraph.getLinks().stream()
-                .filter(link -> link.getTo().getType() == NodeType.SERVICE
-                        && link.getFrom().getType() == NodeType.TOPIC)
-                .forEach(link -> {
-                    OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
-                    String linkPath;
-                    if(link.getBrokerType() == null) {
-                        linkPath = "/" + "no_type"
-                                + "/" + link.getFrom().getName()
-                                + "/" + link.getWhat();
-                    } else {
-                        if (BrokerType.KAFKA == link.getBrokerType()) {
-                            linkPath = "/" + link.getBrokerType().getValue()
-                                    + "/" + link.getGroup()
-                                    + "/" + link.getFrom().getName()
-                                    + "/" + link.getWhat();
-                        } else {
-                            linkPath = "/" + link.getBrokerType().getValue()
-                                    + "/" + link.getFrom().getName()
-                                    + "/" + link.getWhat();
-                        }
-                    }
-                    // add operation in openAPI
-                    if (openAPI.getPaths() == null) {
-                        openAPI.setPaths(new Paths());
-                    }
-                    openAPI.getPaths()
-                            .addPathItem(linkPath, createOperation(link));
-                });
+        for (Link link : eventGraph.getLinks()) {
 
-        // add schemas from input links
-        eventGraph.getLinks().stream()
-                .filter(link -> link.getTo().getType() == NodeType.SERVICE
-                        && link.getFrom().getType() == NodeType.TOPIC)
-                .forEach(link -> {
-                    OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
-                    Schema schema = link.getSchema();
-                    if(openAPI.getComponents() == null) {
-                        openAPI.setComponents(new Components());
-                    }
-                    openAPI.getComponents().addSchemas(link.getWhat(), schema);
-                });
 
-        // open folder. check if folder exists.
-        if (Files.notExists(Path.of(folderPath))) {
-            try {
-                Files.createDirectory(Path.of(folderPath));
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(link.getTo().getType() == NodeType.SERVICE
+                    && link.getFrom().getType() == NodeType.TOPIC){
+                OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
+                if(openAPI.getComponents() == null) {
+                    openAPI.setComponents(new Components());
+                }
+                createPaths(link, openAPI);
+                // add schemas from input links
+                openAPI.getComponents().addSchemas(link.getWhat(), link.getSchema());
+            }else if(link.getFrom().getType() == NodeType.SERVICE
+                    && link.getTo().getType() == NodeType.TOPIC){
+                OpenAPI openAPI = openAPIMap.get(link.getFrom().getName());
+                if(openAPI.getComponents() == null) {
+                    openAPI.setComponents(new Components());
+                }
+                openAPI.getComponents().addSchemas(link.getWhat(), link.getSchema());
             }
         }
         // write in each file each specification from the map.
@@ -177,6 +146,31 @@ public class OpenAPITranslator {
         });
     }
 
+    private static void createPaths(Link link, final OpenAPI openAPI) {
+        String linkPath;
+        if(link.getBrokerType() == null) {
+            linkPath = "/" + "no_type"
+                    + "/" + link.getFrom().getName()
+                    + "/" + link.getWhat();
+        } else {
+            if (BrokerType.KAFKA == link.getBrokerType()) {
+                linkPath = "/" + link.getBrokerType().getValue()
+                        + "/" + link.getGroup()
+                        + "/" + link.getFrom().getName()
+                        + "/" + link.getWhat();
+            } else {
+                linkPath = "/" + link.getBrokerType().getValue()
+                        + "/" + link.getFrom().getName()
+                        + "/" + link.getWhat();
+            }
+        }
+        // add operation in openAPI
+        if (openAPI.getPaths() == null) {
+            openAPI.setPaths(new Paths());
+        }
+        openAPI.getPaths()
+                .addPathItem(linkPath, createOperation(link));
+    }
 
 
     private static PathItem createOperation(Link link) {

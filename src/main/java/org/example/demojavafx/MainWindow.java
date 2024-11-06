@@ -27,6 +27,7 @@ import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
 import org.example.util.EventGraphService;
+import org.example.util.ExportDirUnit;
 import org.example.util.OpenAPITranslator;
 
 import java.io.File;
@@ -130,7 +131,7 @@ public class MainWindow {
         );
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
-
+        //build window for selecting specification files
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) actionEvent.getTarget()).getScene().getWindow());
 
         if (selectedFiles != null) {
@@ -151,7 +152,7 @@ public class MainWindow {
     }
 
     public void exportSpecification(ActionEvent actionEvent) {
-        OpenAPITranslator.saveOpenAPISpecification(eventGraphService.getEventGraph(), "C:\\ideaprojects\\axenapi\\axenapiui\\export");
+        OpenAPITranslator.saveOpenAPISpecification(eventGraphService.getEventGraph(), ExportDirUnit.getExportDir());
     }
 
     public void drawGraph() {

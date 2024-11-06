@@ -1,0 +1,260 @@
+Subject: [PATCH] added logic for generating outgoing messages
+---
+Index: src/main/java/org/example/demojavafx/MainWindow.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/example/demojavafx/MainWindow.java b/src/main/java/org/example/demojavafx/MainWindow.java
+--- a/src/main/java/org/example/demojavafx/MainWindow.java	(revision c27679e07fdef3f0a2caf51d51c370575c14554d)
++++ b/src/main/java/org/example/demojavafx/MainWindow.java	(date 1730893993175)
+@@ -27,6 +27,7 @@
+ import org.example.graph.Link;
+ import org.example.graph.NodeType;
+ import org.example.util.EventGraphService;
++import org.example.util.ExportDirUnit;
+ import org.example.util.OpenAPITranslator;
+ 
+ import java.io.File;
+@@ -130,7 +131,7 @@
+         );
+         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+ 
+-
++        //build window for selecting specification files
+         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) actionEvent.getTarget()).getScene().getWindow());
+ 
+         if (selectedFiles != null) {
+@@ -151,7 +152,7 @@
+     }
+ 
+     public void exportSpecification(ActionEvent actionEvent) {
+-        OpenAPITranslator.saveOpenAPISpecification(eventGraphService.getEventGraph(), "C:\\ideaprojects\\axenapi\\axenapiui\\export");
++        OpenAPITranslator.saveOpenAPISpecification(eventGraphService.getEventGraph(), ExportDirUnit.getExportDir());
+     }
+ 
+     public void drawGraph() {
+Index: src/main/java/org/example/util/OpenAPITranslator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/example/util/OpenAPITranslator.java b/src/main/java/org/example/util/OpenAPITranslator.java
+--- a/src/main/java/org/example/util/OpenAPITranslator.java	(revision c27679e07fdef3f0a2caf51d51c370575c14554d)
++++ b/src/main/java/org/example/util/OpenAPITranslator.java	(date 1730904223943)
+@@ -41,7 +41,7 @@
+             String brokerTypeString = parts[1];
+             BrokerType brokerType = BrokerType.fromValue(brokerTypeString);
+             // if 4 parts , topic is on 2th index. if 5 topic is the 3d one.
+-            String topic = parts.length == 4 ? parts[2] : parts[3];
++            String topic = parts[parts.length - 2];
+             brokers.put(topic, brokerType);
+             if(brokerType == BrokerType.KAFKA) {
+                 consumerGroup.put(topic, parts[2]);
+@@ -97,9 +97,8 @@
+     }
+ 
+     public static void saveOpenAPISpecification(EventGraph eventGraph, String folderPath) {
+-        Map<String, OpenAPI> openAPIMap;
+         // create info  for each openAPI specification by nodes with type SERVICE
+-        openAPIMap = eventGraph.getNodes().stream()
++        Map<String, OpenAPI> openAPIMap = eventGraph.getNodes().stream()
+                 .filter(node -> node.getType() == NodeType.SERVICE)
+                 .collect(
+                         HashMap::new,
+@@ -110,73 +109,68 @@
+         // Each operation has a schema (schema is in the link).
+         // format of url: /kafka/{group}/{topic}/{modelName} method post.
+         // body schema: schema
+-        eventGraph.getLinks().stream()
+-                .filter(link -> link.getTo().getType() == NodeType.SERVICE
+-                        && link.getFrom().getType() == NodeType.TOPIC)
+-                .forEach(link -> {
+-                    OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
+-                    String linkPath;
+-                    if(link.getBrokerType() == null) {
+-                        linkPath = "/" + "no_type"
+-                                + "/" + link.getFrom().getName()
+-                                + "/" + link.getWhat();
+-                    } else {
+-                        if (BrokerType.KAFKA == link.getBrokerType()) {
+-                            linkPath = "/" + link.getBrokerType().getValue()
+-                                    + "/" + link.getGroup()
+-                                    + "/" + link.getFrom().getName()
+-                                    + "/" + link.getWhat();
+-                        } else {
+-                            linkPath = "/" + link.getBrokerType().getValue()
+-                                    + "/" + link.getFrom().getName()
+-                                    + "/" + link.getWhat();
+-                        }
+-                    }
+-                    // add operation in openAPI
+-                    if (openAPI.getPaths() == null) {
+-                        openAPI.setPaths(new Paths());
+-                    }
+-                    openAPI.getPaths()
+-                            .addPathItem(linkPath, createOperation(link));
+-                });
+-
+-        // add schemas from input links
+-        eventGraph.getLinks().stream()
+-                .filter(link -> link.getTo().getType() == NodeType.SERVICE
+-                        && link.getFrom().getType() == NodeType.TOPIC)
+-                .forEach(link -> {
+-                    OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
+-                    Schema schema = link.getSchema();
+-                    if(openAPI.getComponents() == null) {
+-                        openAPI.setComponents(new Components());
+-                    }
+-                    openAPI.getComponents().addSchemas(link.getWhat(), schema);
+-                });
+-
+-        // open folder. check if folder exists.
+-        if (Files.notExists(Path.of(folderPath))) {
+-            try {
+-                Files.createDirectory(Path.of(folderPath));
+-            } catch (IOException e) {
+-                e.printStackTrace();
+-            }
+-        }
+-        // write in each file each specification from the map.
+-        openAPIMap.forEach((key, value) -> {
+-            // key - the name of file. ext = json
+-            // create file and write spec into it
+-            String fileName = folderPath + "/" + key + ".json";
+-            try {
+-                // map value (OpenAPI) to json or json-string
+-                String jsonValue = Json.pretty(value);
+-                // write json into file
+-                Files.writeString(Path.of(fileName), jsonValue);
+-            } catch (IOException e) {
+-                e.printStackTrace();
+-            }
+-        });
++        for (Link link : eventGraph.getLinks()) {
++
++
++            if(link.getTo().getType() == NodeType.SERVICE
++                    && link.getFrom().getType() == NodeType.TOPIC){
++                OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
++                if(openAPI.getComponents() == null) {
++                    openAPI.setComponents(new Components());
++                }
++                createPaths(link, openAPI);
++                // add schemas from input links
++                openAPI.getComponents().addSchemas(link.getWhat(), link.getSchema());
++            }else if(link.getFrom().getType() == NodeType.SERVICE
++                    && link.getTo().getType() == NodeType.TOPIC){
++                OpenAPI openAPI = openAPIMap.get(link.getFrom().getName());
++                if(openAPI.getComponents() == null) {
++                    openAPI.setComponents(new Components());
++                }
++                openAPI.getComponents().addSchemas(link.getWhat(), link.getSchema());
++            }
++        }
++        // write in each file each specification from the map.
++        openAPIMap.forEach((key, value) -> {
++            // key - the name of file. ext = json
++            // create file and write spec into it
++            String fileName = folderPath + "/" + key + ".json";
++            try {
++                // map value (OpenAPI) to json or json-string
++                String jsonValue = Json.pretty(value);
++                // write json into file
++                Files.writeString(Path.of(fileName), jsonValue);
++            } catch (IOException e) {
++                e.printStackTrace();
++            }
++        });
++    }
++
++    private static void createPaths(Link link, final OpenAPI openAPI) {
++        String linkPath;
++        if(link.getBrokerType() == null) {
++            linkPath = "/" + "no_type"
++                    + "/" + link.getFrom().getName()
++                    + "/" + link.getWhat();
++        } else {
++            if (BrokerType.KAFKA == link.getBrokerType()) {
++                linkPath = "/" + link.getBrokerType().getValue()
++                        + "/" + link.getGroup()
++                        + "/" + link.getFrom().getName()
++                        + "/" + link.getWhat();
++            } else {
++                linkPath = "/" + link.getBrokerType().getValue()
++                        + "/" + link.getFrom().getName()
++                        + "/" + link.getWhat();
++            }
++        }
++        // add operation in openAPI
++        if (openAPI.getPaths() == null) {
++            openAPI.setPaths(new Paths());
++        }
++        openAPI.getPaths()
++                .addPathItem(linkPath, createOperation(link));
+     }
+-
+ 
+ 
+     private static PathItem createOperation(Link link) {
+Index: src/main/java/org/example/util/ExportDirUnit.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/example/util/ExportDirUnit.java b/src/main/java/org/example/util/ExportDirUnit.java
+new file mode 100644
+--- /dev/null	(date 1730892397392)
++++ b/src/main/java/org/example/util/ExportDirUnit.java	(date 1730892397392)
+@@ -0,0 +1,33 @@
++package org.example.util;
++
++import lombok.extern.slf4j.Slf4j;
++
++import java.io.File;
++
++@Slf4j
++public class ExportDirUnit {
++
++    public static String getExportDir(){
++        String executedJarLocation = ExportDirUnit.class.getProtectionDomain().getCodeSource()
++                .getLocation().getFile();
++        int index = executedJarLocation.indexOf("build");
++        File projDirFile = null;
++        if(index != -1){
++            String projectDir = executedJarLocation.substring(0, index);
++            projDirFile = new File(projectDir + "export");
++            if(!projDirFile.exists()){
++                boolean mkdir = projDirFile.mkdir();
++                log.info("Export dir {} was created: ", projDirFile, mkdir);
++            }
++        }else{
++            index = executedJarLocation.lastIndexOf("/");
++            String projectDir = executedJarLocation.substring(0, index + 1);
++            projDirFile = new File(projectDir + "export");
++            if(!projDirFile.exists()){
++                boolean mkdir = projDirFile.mkdir();
++                log.info("Export dir {} was created: ", projDirFile, mkdir);
++            }
++        }
++        return projDirFile.getAbsolutePath();
++    }
++}
+Index: src/main/java/org/example/demojavafx/CreateCodeController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/example/demojavafx/CreateCodeController.java b/src/main/java/org/example/demojavafx/CreateCodeController.java
+--- a/src/main/java/org/example/demojavafx/CreateCodeController.java	(revision c27679e07fdef3f0a2caf51d51c370575c14554d)
++++ b/src/main/java/org/example/demojavafx/CreateCodeController.java	(date 1730892397386)
+@@ -126,7 +126,8 @@
+ 
+     public void generateCode(ActionEvent actionEvent) {
+         List<ServiceInfo> serviceInfoList = new ArrayList<>();
+-        String specDir = "C:\\ideaprojects\\axenapi\\axenapiui\\export";
++        String specDir = ExportDirUnit.getExportDir();
++
+         OpenAPITranslator
+                 .saveOpenAPISpecification
+                         (eventGraphService.getEventGraph(), specDir);

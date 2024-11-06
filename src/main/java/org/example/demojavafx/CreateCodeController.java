@@ -126,7 +126,8 @@ public class CreateCodeController {
 
     public void generateCode(ActionEvent actionEvent) {
         List<ServiceInfo> serviceInfoList = new ArrayList<>();
-        String specDir = "C:\\ideaprojects\\axenapi\\axenapiui\\export";
+        String specDir = ExportDirUnit.getExportDir();
+
         OpenAPITranslator
                 .saveOpenAPISpecification
                         (eventGraphService.getEventGraph(), specDir);

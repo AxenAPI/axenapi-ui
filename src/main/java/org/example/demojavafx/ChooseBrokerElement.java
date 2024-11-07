@@ -1,6 +1,5 @@
 package org.example.demojavafx;
 
-import com.dlsc.formsfx.model.structure.SelectionField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -25,5 +24,9 @@ public class ChooseBrokerElement {
         if(require != null) {
             require.setBrokerServer(brokerServer);
         }
+    }
+
+    public void setRequire(BrokerServerRequire createLink) {
+        this.require = createLink;
     }
 }

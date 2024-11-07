@@ -51,6 +51,8 @@ public class CreateLink implements BrokerServerRequire {
     public void initialize() throws IOException {
         FXMLLoader childLoader = new FXMLLoader(getClass().getResource("chooseBrokerElement.fxml"));
         brokerChooser = childLoader.load();
+        ChooseBrokerElement chooseBroker = childLoader.getController();
+        chooseBroker.setRequire(this);
         addElementsIntoComboBoxes();
     }
     public void addElementsIntoComboBoxes() {

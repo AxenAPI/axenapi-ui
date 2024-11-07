@@ -5,16 +5,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.example.codegen.info.BrokerServer;
 import org.example.codegen.info.BrokerServers;
+import org.example.demojavafx.markers.BrokerServerRequire;
 import org.example.graph.Node;
 import org.example.graph.NodeType;
 import org.example.util.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public class CreateCodeController {
@@ -67,7 +71,7 @@ public class CreateCodeController {
                     Node node = event.getTableView().getItems().get(event.getTablePosition().getRow());
                     portMap.put(node, event.getNewValue());
         });
-        selectColumn.setCellFactory(column -> new TableCell<>() {
+        selectColumn.setCellFactory(column -> new TableCell<>(){
             private final CheckBox checkBox = new CheckBox();
 
             {
@@ -96,14 +100,12 @@ public class CreateCodeController {
         servises.forEach(node -> brokerServerMap.put(node, brokers.iterator().next()));
         // set select from list.
         broker.setCellFactory(column -> new TableCell<>() {
-            private final ComboBox<BrokerServer> comboBox = new ComboBox<>();
+            private final BrokerServerRequire require;
             {
-                comboBox.getItems().addAll(brokers);
-                // set default value
-                comboBox.setOnAction(event -> {
+                require = brokerServer -> {
                     Node node = getTableView().getItems().get(getIndex());
-                    brokerServerMap.put(node, comboBox.getValue());
-                });
+                    brokerServerMap.put(node, brokerServer);
+                };
             }
 
             @Override
@@ -112,8 +114,15 @@ public class CreateCodeController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    comboBox.getSelectionModel().selectFirst();
-                    setGraphic(comboBox);
+                    try {
+                        FXMLLoader childLoader = new FXMLLoader(getClass().getResource("chooseBrokerElement.fxml"));
+                        VBox brokerChooser = childLoader.load();
+                        ChooseBrokerElement chooseBroker = childLoader.getController();
+                        chooseBroker.setRequire(require);
+                        setGraphic(brokerChooser);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });

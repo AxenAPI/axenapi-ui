@@ -8,6 +8,7 @@
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
+
     <center>
         <SplitPane>
          <GridPane>
@@ -20,6 +21,7 @@
              <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="0.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
+            <fx:include source="pathChooser.fxml" />
                    <TableView fx:id="serviceTable" styleClass="custom-table-view" GridPane.rowIndex="1">
                    </TableView>
                <ToolBar prefHeight="38.0" prefWidth="255.0" GridPane.rowIndex="2">

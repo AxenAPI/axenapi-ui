@@ -15,11 +15,17 @@ public enum CodeGeneratorImpl implements CodeGenerator {
     private String axenapiGeneratorPath = AXENAPI_GENERATOR_JAR_PATH;
 
     @Override
-    public boolean generateCode(List<ServiceInfo> serviceInfoList) {
+    public boolean generateCode(List<ServiceInfo> serviceInfoList, String directory) {
         //$ java -cp "axenapi-generator-2.0.0.jar;openapi-generator-cli.jar" org.openapitools.codegen.OpenAPIGenerator generate -g messageBroker -o out/ -i api-docs.json --additional-properties=kafkaBootstrap=localhost:29092
         serviceInfoList.forEach(serviceInfo -> {
-            String outputDir = "C:\\ideaprojects\\demo_out\\" + serviceInfo.getName();
-            //create output dir
+            directory.trim();
+            String outputDir;
+            if(directory.endsWith("\\") || directory.endsWith("/")) {
+                outputDir = directory + serviceInfo.getName();
+            } else {
+                outputDir = directory + "\\" + serviceInfo.getName();
+            }
+
 
             boolean mkdirs = new File(outputDir).mkdirs();
             StringBuilder cmd = new StringBuilder();

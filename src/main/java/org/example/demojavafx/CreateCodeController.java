@@ -5,15 +5,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.example.codegen.info.BrokerServer;
 import org.example.codegen.info.BrokerServers;
 import org.example.demojavafx.markers.BrokerServerRequire;
+import org.example.demojavafx.markers.Exporter;
 import org.example.graph.Node;
 import org.example.graph.NodeType;
 import org.example.util.*;
@@ -21,7 +24,10 @@ import org.example.util.*;
 import java.io.IOException;
 import java.util.*;
 
-public class CreateCodeController {
+public class CreateCodeController implements Exporter {
+
+    @FXML
+    public PathChooserController pathChooserController;
 
     EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
     BrokerServers brokerServers = BrokerServers.BROKER_SERVERS;
@@ -34,9 +40,11 @@ public class CreateCodeController {
     private MainWindow parent;
     Map<Node, BrokerServer> brokerServerMap = new HashMap<>();
     Map<Node, String> portMap = new HashMap<>();
+    private String directory;
 
 
-    public void initialize() {
+    public void initialize() throws IOException {
+        pathChooserController.setExporter(this);
         // table: name, port, choose broker
         List<Node> servises = eventGraphService.getEventGraph()
                 .getNodesByType(NodeType.SERVICE);
@@ -153,10 +161,16 @@ public class CreateCodeController {
             builder.specificationPath(specPath);
             serviceInfoList.add(builder.build());
         });
-        codeGenerator.generateCode(serviceInfoList);
+        directory = pathChooserController.getDirectory();
+        codeGenerator.generateCode(serviceInfoList, directory);
     }
 
     public void setParent(MainWindow mainWindow) {
         this.parent = mainWindow;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.CODE;
     }
 }

@@ -152,7 +152,16 @@ public class MainWindow {
     }
 
     public void exportSpecification(ActionEvent actionEvent) {
-        OpenAPITranslator.saveOpenAPISpecification(eventGraphService.getEventGraph(), ExportDirUnit.getExportDir());
+        //open exportSpec.fxml
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("exportSpec.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void drawGraph() {

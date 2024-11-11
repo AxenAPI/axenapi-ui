@@ -26,5 +26,7 @@ module org.example.demojavafx {
     exports org.example.graph;
     exports org.example.codegen.info;
     opens org.example.util to javafx.fxml;
+    exports org.example.demojavafx.datamodel;
+    opens org.example.demojavafx.datamodel to javafx.fxml;
 
 }

@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,6 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.example.demojavafx.datamodel.EventDataModel;
+import org.example.demojavafx.datamodel.TopicDataModel;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
@@ -42,11 +45,25 @@ public class MainWindow {
     public TableView<MyDataModel> fileInfoTable;
     ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
 
+    @FXML
+    public TableView<TopicDataModel> topicTable;
+    ObservableList<TopicDataModel> topicList = FXCollections.observableArrayList();
+
+    @FXML
+    public TableView<EventDataModel> eventTable;
+    ObservableList<EventDataModel> eventList = FXCollections.observableArrayList();
+
     private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
 
 
     public void initialize() {
         fileInfoTable.setItems(tableData);
+        eventTable.setItems(eventList);
+        topicTable.setItems(topicList);
+
+        eventTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
+        topicTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
+
         TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(0);
         column2.setCellValueFactory(new PropertyValueFactory<>("title"));
         TableColumn<MyDataModel, Boolean> selectColumn = new TableColumn<>("Select");
@@ -143,8 +160,18 @@ public class MainWindow {
                 // java code: add raw in table fileInfoTable
                 tableData.add(new MyDataModel(file.getName(), eventGraph.getTitle(), file.getAbsolutePath()));
             }
+            reloadTopicsAndEvent();
             drawGraph();
         }
+    }
+
+    private void reloadTopicsAndEvent() {
+        eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).forEach(topic -> {
+            topicList.add(new TopicDataModel(topic.getName(), topic));
+        });
+        eventGraphService.getEventGraph().getEventNames().forEach(event -> {
+            eventList.add(new EventDataModel(event));
+        });
     }
 
     public void resetZoom(ActionEvent actionEvent) {

@@ -38,6 +38,7 @@ public class CreateEvent {
 
         schema.setName(name);
         EventGraphService.EVENT_GRAPH_SERVICE.getEventGraph().addEdge(name, schema);
+        this.controller.addEventToTable(name);
         controller.drawGraph();
     }
     // copy from  @io.swagger.v3.core.util.ModelDeserializer

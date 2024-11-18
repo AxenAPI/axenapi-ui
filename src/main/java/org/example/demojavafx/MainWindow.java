@@ -9,8 +9,6 @@ import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,15 +20,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.example.demojavafx.datamodel.Color;
 import org.example.demojavafx.datamodel.EventDataModel;
 import org.example.demojavafx.datamodel.TopicDataModel;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
 import org.example.util.EventGraphService;
-import org.example.util.ExportDirUnit;
 import org.example.util.OpenAPITranslator;
 
 import java.io.File;
@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class MainWindow {
 
@@ -54,6 +55,7 @@ public class MainWindow {
     ObservableList<EventDataModel> eventList = FXCollections.observableArrayList();
 
     private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
+    private int colorNum = 0;
 
 
     public void initialize() {
@@ -63,6 +65,7 @@ public class MainWindow {
 
         eventTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
         topicTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
+        addColorToEventTable();
 
         TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(0);
         column2.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -96,6 +99,7 @@ public class MainWindow {
                         eventGraphService.deleteService(serviceName);
                         getTableView().getItems().remove(getIndex());
                         getTableView().refresh();
+                        reloadTopicsAndEvent();
                         drawGraph();
                     });
                 }
@@ -136,6 +140,34 @@ public class MainWindow {
 
     }
 
+    private void addColorToEventTable() {
+        TableColumn<EventDataModel, Color> colorColumn = new TableColumn<>("Color");
+
+        colorColumn.setCellFactory(column -> new TableCell<>() {
+                 @Override
+                 public void updateItem(Color item, boolean empty) {
+                     super.updateItem(item, empty);
+                     if (empty) {
+                         setGraphic(null);
+                     } else {
+                         EventDataModel rowData = getTableView().getItems().get(getIndex());
+                         item = rowData.getColor();
+                         // draw small circle
+                         Circle circle = new Circle();
+                         circle.setRadius(10);
+                         if (item != null) {
+                             circle.setFill(javafx.scene.paint.Color.rgb(
+                                     item.r, item.g, item.b
+                             ));
+                         }
+                         setGraphic(circle);
+                     }
+                 }
+            }
+        );
+        eventTable.getColumns().add(colorColumn);
+    }
+
     public void viewEventGraph(ActionEvent actionEvent) {
 
     }
@@ -166,11 +198,24 @@ public class MainWindow {
     }
 
     private void reloadTopicsAndEvent() {
+        eventList.clear();
+        topicList.clear();
         eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).forEach(topic -> {
-            topicList.add(new TopicDataModel(topic.getName(), topic));
+            TopicDataModel topicDataModel = new TopicDataModel(topic.getName(), topic);
+            if(!topicList.contains(topicDataModel)) {
+                topicList.add(topicDataModel);
+            }
         });
         eventGraphService.getEventGraph().getEventNames().forEach(event -> {
-            eventList.add(new EventDataModel(event));
+            EventDataModel eventDataModel = new EventDataModel(event);
+            if(!eventList.contains(eventDataModel)) {
+                eventDataModel.setColor(Color.values()[colorNum]);
+                eventList.add(eventDataModel);
+                colorNum++;
+                if(colorNum == Color.values().length) {
+                    colorNum = 0;
+                }
+            }
         });
     }
 
@@ -226,10 +271,27 @@ public class MainWindow {
 
         SubScene eventGraphScene = new SubScene(graphView, 1024, 768);
         eventGraphScene.setRoot(graphView);
+        setColorsToEdges(graphView, g);
 
         // add subscene in pane
         pane.getChildren().add(eventGraphScene);
         graphView.init();
+    }
+
+    private void setColorsToEdges(SmartGraphPanel<org.example.graph.Node, Link> graphView, Graph<org.example.graph.Node, Link> g) {
+        Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
+        edges.forEach(e -> {
+            SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
+            String eventName = e.element().getWhat();
+            Optional<EventDataModel> eventDataModel = eventList.stream().findFirst().filter(
+                    o -> o.getTitle().equals(eventName)
+            );
+            eventDataModel.ifPresent(
+                    dataModel ->
+                            stylableEdge.addStyleClass(dataModel.getCSSClass()));
+
+        });
+
     }
 
     public void addService(ActionEvent actionEvent) {
@@ -261,7 +323,10 @@ public class MainWindow {
 
     public void addTopic(ActionEvent actionEvent) {
         int number = eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).size() + 1;
-        eventGraphService.addNode(new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null));
+        org.example.graph.Node node = new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null);
+        eventGraphService.addNode(node);
+        topicList.add(new TopicDataModel(node.getName(), node));
+//        reloadTopicsAndEvent();
         drawGraph();
     }
 
@@ -290,6 +355,7 @@ public class MainWindow {
     public void clearGraph(ActionEvent actionEvent) {
         eventGraphService.clear();
         tableData.clear();
+        reloadTopicsAndEvent();
         drawGraph();
     }
 
@@ -331,5 +397,14 @@ public class MainWindow {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void addEventToTable(String name) {
+        Color c = Color.values()[colorNum];
+        eventList.add(new EventDataModel(name, c));
+        colorNum++;
+        if(colorNum == Color.values().length) {
+            colorNum = 0;
+        }
     }
 }

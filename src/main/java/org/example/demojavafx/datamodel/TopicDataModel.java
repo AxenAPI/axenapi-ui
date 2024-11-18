@@ -1,8 +1,10 @@
 package org.example.demojavafx.datamodel;
 
+import lombok.EqualsAndHashCode;
 import org.example.graph.BrokerType;
 import org.example.graph.Node;
 
+@EqualsAndHashCode(of = "title")
 public class TopicDataModel {
     private Node node;
     private String title;

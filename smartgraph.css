@@ -9,7 +9,7 @@
 
 .edge {
     -fx-stroke-width: 2;
-    -fx-stroke: #FFD700; /* Updated edge stroke color */
+    /*-fx-stroke: #FFD700; !* Updated edge stroke color *!*/
     -fx-stroke-dash-array: 2 5 2 5;
     -fx-fill: transparent;
     -fx-stroke-line-cap: round;
@@ -20,6 +20,98 @@
     -fx-stroke-width: 4;
     -fx-cursor: hand; /* Change the cursor to a hand */
 }
+
+/*
+RED(255, 0, 0, "edgeRed"), GREEN(0, 255, 0, "edgeGreen"), BLUE(0, 0, 255, "edgeBlue"),
+    YELLOW(255, 255, 0, "edgeYellow"), ORANGE(255, 165, 0, "edgeOrange"),
+    PURPLE(128, 0, 128, "edgePurple"), PINK(255, 192, 203, "edgePink"),
+    BROWN(165, 42, 42, "edgeBrown"), BLACK(0, 0, 0, "edgeBlack"), WHITE(255, 255, 255, "edgeWhite"),
+    GRAY(128, 128, 128, "edgeGray"), AQUA(0, 255, 255, "edgeAqua"),
+    SILVER(192, 192, 192, "edgeSilver"), GOLD(255, 215, 0, "edgeGold"),
+    LIME(0, 255, 0, "edgeLime"), TEAL(0, 128, 128, "edgeTeal"), NAVY(0, 0, 128, "edgeNavy"),
+    MAROON(128, 0, 0, "edgeMaroon"), OLIVE(128, 128, 0, "edgeOlive"), INDIGO(75, 0, 130, "edgeIndigo");
+*/
+.edgeGreen {
+    -fx-stroke: #00FF00;
+}
+
+.edgeRed {
+    -fx-stroke: #FF0000;
+}
+
+.edgeBlue {
+    -fx-stroke: #0000FF;
+}
+
+.edgeYellow {
+    -fx-stroke: #FFFF00;
+}
+
+.edgeOrange {
+    -fx-stroke: #FFA500;
+}
+
+.edgePurple {
+    -fx-stroke: #800080;
+}
+
+.edgePink {
+    -fx-stroke: #FFC0CB;
+}
+
+.edgeBrown {
+    -fx-stroke: #A52A2A;
+}
+
+.edgeBlack {
+    -fx-stroke: #000000;
+}
+
+.edgeWhite {
+    -fx-stroke: #FFFFFF;
+}
+
+.edgeGray {
+    -fx-stroke: #808080;
+}
+
+.edgeAqua {
+    -fx-stroke: #00FFFF;
+}
+
+.edgeSilver {
+    -fx-stroke: #C0C0C0;
+}
+
+.edgeGold {
+    -fx-stroke: #FFD700;
+}
+
+.edgeLime {
+    -fx-stroke: #00FF00;
+}
+
+.edgeTeal {
+    -fx-stroke: #008080;
+}
+
+.edgeNavy {
+    -fx-stroke: #000080;
+}
+
+.edgeMaroon {
+    -fx-stroke: #800000;
+}
+
+.edgeOlive {
+    -fx-stroke: #808000;
+}
+
+.edgeIndigo {
+    -fx-stroke: #4B0082;
+}
+
+
 
 
 .arrow {

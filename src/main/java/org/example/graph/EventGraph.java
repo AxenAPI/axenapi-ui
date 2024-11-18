@@ -1,6 +1,7 @@
 package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
+import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Graph;
 import io.swagger.v3.oas.models.media.Schema;
 import org.example.util.OpenAPITranslator;

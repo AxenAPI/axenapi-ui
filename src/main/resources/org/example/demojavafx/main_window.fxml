@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
@@ -25,9 +26,12 @@
         <URL value="@styles.css" />
     </stylesheets>
     <top>
-        <MenuBar prefHeight="10.0" prefWidth="519.0">
+        <MenuBar fx:id="menuBar" prefHeight="10.0" prefWidth="519.0">
             <Menu text="File">
-                <!-- Add file options here -->
+            <items>
+                <MenuItem mnemonicParsing="false" text="Load File" onAction="#loadGraph" />
+                <MenuItem mnemonicParsing="false" text="Save File" onAction="#saveGraph" />
+            </items>
             </Menu>
             <Menu text="Help">
                 <!-- Add help options here -->

@@ -3,16 +3,31 @@ package org.example.graph;
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Graph;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.models.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.util.OpenAPITranslator;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventGraph {
+
     private String name;
+
+    @Setter
     private Set<Node> nodes = new HashSet<>();
+
+    @Setter
+    @JsonIgnore
     private Map<String, Schema> edges = new HashMap<>();
+
+    @Setter
     private Set<Link> links = new HashSet<>();
 
     public void addNode(Node node) {
@@ -123,6 +138,7 @@ public class EventGraph {
         return g;
     }
 
+    @JsonIgnore
     public String getTitle() {
         return name;
     }
@@ -169,6 +185,7 @@ public class EventGraph {
         });
     }
 
+    @JsonIgnore
     public Iterable<String> getEventNames() {
         return edges.keySet();
     }
@@ -184,6 +201,15 @@ public class EventGraph {
         nodes.forEach(node -> node.removeBelongsToVisibleGraph(graphName));
         nodes.removeIf(node -> node.getBelongsToVisibleGraph().isEmpty());
         links.removeIf(link -> link.getName().equals(graphName));
+    }
+
+    public void removeNodesWithoutLinks() {
+        nodes.removeIf(node -> {
+            boolean hasLink = links.stream()
+                    .anyMatch(link -> link.getFrom().equals(node)
+                            || link.getTo().equals(node));
+            return !hasLink;
+        });
     }
 }
 

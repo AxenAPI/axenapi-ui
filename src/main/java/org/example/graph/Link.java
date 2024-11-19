@@ -2,19 +2,29 @@ package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graphview.SmartLabelSource;
 import io.swagger.v3.oas.models.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Link {
     private String name;
      private Node from;
      private Node to;
      private Schema schema;
      private String what;
-     private BrokerType brokerType;
+    // todo: set broker into link
+    private BrokerType brokerType;
 
      private boolean visible;
-     private String group;
+    // todo: set group into link
+    private String group;
 
     public Link(Node from, Node to, String what, String name, Schema schema, BrokerType brokerType, String group) {
          this.from = from;
@@ -48,55 +58,9 @@ public class Link {
                  '}';
      }
 
-    public Node getFrom() {
-        return from;
-    }
-
-    public Node getTo() {
-        return to;
-    }
-
-    public String getWhat() {
-        return what;
-    }
-
     @SmartLabelSource
     public String view() {
         return what;
-    }
-
-    public void setFrom(Node node) {
-        from = node;
-    }
-
-    public void setTo(Node node) {
-        to = node;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public void setSchema(Schema schema) {
-        this.schema = schema;
-    }
-
-    public Schema getSchema() {
-        return schema;
-    }
-
-    public BrokerType getBrokerType() {
-         // todo: set broker into link
-        return brokerType;
-    }
-
-    public String getGroup() {
-         // todo: set group into link
-        return group;
     }
 
     public Node getNode(NodeType nodeType) {

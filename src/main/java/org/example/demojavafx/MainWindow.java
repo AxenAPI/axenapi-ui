@@ -31,6 +31,7 @@ import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
 import org.example.util.EventGraphService;
+import org.example.util.EventGraphUtil;
 import org.example.util.OpenAPITranslator;
 
 import java.io.File;
@@ -41,6 +42,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class MainWindow {
+
+    @FXML
+    public MenuBar menuBar;
 
     public StackPane pane;
     public TableView<MyDataModel> fileInfoTable;
@@ -405,6 +409,44 @@ public class MainWindow {
         colorNum++;
         if(colorNum == Color.values().length) {
             colorNum = 0;
+        }
+    }
+
+    public void loadGraph(ActionEvent actionEvent) throws IOException {
+        // choose file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Files");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        //build window for selecting specification files
+        File selectedFile = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+
+        if (selectedFile != null) {
+            EventGraph eventGraph = EventGraphUtil.loadGraph(selectedFile.getAbsolutePath());
+            eventGraphService.clear();
+            eventGraphService.mergeEventGraph(eventGraph);
+            eventGraphService.getEventGraph().getNodesByType(NodeType.SERVICE).forEach(s -> {
+                tableData.add(new MyDataModel(s.getName(), s.getName(), ""));
+            });
+            reloadTopicsAndEvent();
+            drawGraph();
+
+        }
+    }
+
+    public void saveGraph(ActionEvent actionEvent) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Files");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File selectedFile = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+        if (selectedFile != null) {
+            EventGraphUtil.saveGraphAsJson(eventGraphService.getEventGraph(), selectedFile.getAbsolutePath());
         }
     }
 }

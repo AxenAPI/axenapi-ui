@@ -78,12 +78,15 @@ public class CreateLink implements BrokerServerRequire {
                 topicNode.setBroker(type);
             }
             // get schema from eventGraph by link.what
-            Schema schema = eventGraph.getEdges().get(event);
+            Event eventSchema = eventGraph.getEvent(event);
+            if(eventSchema == null) {
+                throw new IllegalStateException("Event " + event + " not found in eventGraphService");
+            }
             Link link;
             if(direction) {
-                link = new Link(topicNode, serviceNode, event, service, schema, topicNode.getBroker(), group);
+                link = new Link(topicNode, serviceNode, group, eventSchema);
             } else {
-                link = new Link(serviceNode, topicNode, event, service, schema, topicNode.getBroker(), group);
+                link = new Link(serviceNode, topicNode, group, eventSchema);
             }
             eventGraph.addLink(link);
             eventGraphService.getEventGraph().print();

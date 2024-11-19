@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.demojavafx.datamodel.Color;
 import org.example.util.OpenAPITranslator;
 
 import java.util.*;
@@ -23,9 +24,9 @@ public class EventGraph {
     @Setter
     private Set<Node> nodes = new HashSet<>();
 
+    @Getter
     @Setter
-    @JsonIgnore
-    private Map<String, Schema> edges = new HashMap<>();
+    private Map<String, Event> events = new HashMap<>();
 
     @Setter
     private Set<Link> links = new HashSet<>();
@@ -39,8 +40,8 @@ public class EventGraph {
     }
 
     public void addLink(Link link) {
-        if(link.getWhat() != null && link.getSchema() != null) {
-            edges.put(link.getWhat(), link.getSchema());
+        if(link.getEvent() != null) {
+            events.put(link.getEvent().getName(), link.getEvent());
         }
         links.add(link);
         // get service from link
@@ -67,10 +68,6 @@ public class EventGraph {
     public void print() {
         System.out.println("Nodes: " + Arrays.deepToString(nodes.toArray()));
         System.out.println("Links: " + Arrays.deepToString(links.toArray()));
-    }
-
-    public Map<String, Schema> getEdges() {
-        return edges;
     }
 
     public Set<Link> getLinks() {
@@ -152,7 +149,7 @@ public class EventGraph {
         });
 
         links.forEach(link -> {
-            if(link.getName().equals(graphName)) {
+            if(link.getServiceName().equals(graphName)) {
                 link.setVisible(false);
             }
         });
@@ -179,7 +176,7 @@ public class EventGraph {
         });
 
         links.forEach(link -> {
-            if(link.getName().equals(name)) {
+            if(link.getServiceName().equals(name)) {
                 link.setVisible(true);
             }
         });
@@ -187,20 +184,13 @@ public class EventGraph {
 
     @JsonIgnore
     public Iterable<String> getEventNames() {
-        return edges.keySet();
-    }
-
-    public void addEdge(String name, Schema schema) {
-        if(edges == null) {
-            edges = new HashMap<>();
-        }
-        edges.put(name, schema);
+        return events.keySet();
     }
 
     public void deleteService(String graphName) {
         nodes.forEach(node -> node.removeBelongsToVisibleGraph(graphName));
         nodes.removeIf(node -> node.getBelongsToVisibleGraph().isEmpty());
-        links.removeIf(link -> link.getName().equals(graphName));
+        links.removeIf(link -> link.getServiceName().equals(graphName));
     }
 
     public void removeNodesWithoutLinks() {
@@ -210,6 +200,19 @@ public class EventGraph {
                             || link.getTo().equals(node));
             return !hasLink;
         });
+    }
+
+    @JsonIgnore
+    public Event getEvent(String event) {
+        return events.get(event);
+    }
+
+    @JsonIgnore
+    public Color getEventColor() {
+        if(events == null || events.isEmpty()) {
+            return Color.values()[0];
+        }
+        return Color.values()[events.size() % Color.values().length];
     }
 }
 

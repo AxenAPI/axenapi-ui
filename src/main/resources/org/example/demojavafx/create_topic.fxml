@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="center" hgap="10" stylesheets="@link.css" vgap="10"
+ xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+ fx:controller="org.example.demojavafx.CreateTopicController">
+
+    <Label styleClass="label" text="Topic Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <TextField fx:id="topicNameTextField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <!--    text box for group (only for consumers) -->
+    <Label styleClass="label" text="Topic Type" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <ComboBox fx:id="topicTypeComboBox" styleClass="comboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Button maxWidth="1.7976931348623157E308" onAction="#createTopic" prefWidth="191.0" styleClass="button" text="Create" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import org.example.demojavafx.datamodel.Color;
 import org.example.demojavafx.datamodel.EventDataModel;
 import org.example.demojavafx.datamodel.TopicDataModel;
+import org.example.graph.Event;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
@@ -264,7 +265,7 @@ public class MainWindow {
             //dynamically change the style, can also be done for a vertex
             Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
             edges.forEach(e -> {
-                if(e.element().getWhat().equals(graphEdge.getUnderlyingEdge().element().getWhat())) {
+                if(e.element().getEvent().equals(graphEdge.getUnderlyingEdge().element().getEvent())) {
                     SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
                     if(!stylableEdge.removeStyleClass("selectedEvent")) {
                         stylableEdge.addStyleClass("selectedEvent");
@@ -286,7 +287,7 @@ public class MainWindow {
         Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
         edges.forEach(e -> {
             SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
-            String eventName = e.element().getWhat();
+            String eventName = e.element().getEvent().getName();
             Optional<EventDataModel> eventDataModel = eventList.stream().findFirst().filter(
                     o -> o.getTitle().equals(eventName)
             );
@@ -403,13 +404,8 @@ public class MainWindow {
 
     }
 
-    public void addEventToTable(String name) {
-        Color c = Color.values()[colorNum];
-        eventList.add(new EventDataModel(name, c));
-        colorNum++;
-        if(colorNum == Color.values().length) {
-            colorNum = 0;
-        }
+    public void addEventToTable(Event event) {
+        eventList.add(new EventDataModel(event.getName(), event.getColor()));
     }
 
     public void loadGraph(ActionEvent actionEvent) throws IOException {

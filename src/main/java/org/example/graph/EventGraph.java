@@ -1,10 +1,8 @@
 package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
-import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Graph;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.models.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -213,6 +211,12 @@ public class EventGraph {
             return Color.values()[0];
         }
         return Color.values()[events.size() % Color.values().length];
+    }
+
+    @JsonIgnore
+    public String getNextTopicName() {
+        List<Node> topics = getNodesByType(NodeType.TOPIC);
+        return "new_topic" + (topics.size() + 1);
     }
 }
 

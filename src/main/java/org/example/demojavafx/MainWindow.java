@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -62,6 +63,11 @@ public class MainWindow {
     private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
     private int colorNum = 0;
 
+    @FXML
+    public TabPane tabPane;
+
+    @FXML
+    public GridPane gridPane;
 
     public void initialize() {
         fileInfoTable.setItems(tableData);
@@ -202,7 +208,7 @@ public class MainWindow {
         }
     }
 
-    private void reloadTopicsAndEvent() {
+    public void reloadTopicsAndEvent() {
         eventList.clear();
         topicList.clear();
         eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).forEach(topic -> {
@@ -327,12 +333,27 @@ public class MainWindow {
     }
 
     public void addTopic(ActionEvent actionEvent) {
-        int number = eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).size() + 1;
-        org.example.graph.Node node = new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null);
-        eventGraphService.addNode(node);
-        topicList.add(new TopicDataModel(node.getName(), node));
+//        int number = eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).size() + 1;
+//        org.example.graph.Node node = new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null);
+//        eventGraphService.addNode(node);
+//        topicList.add(new TopicDataModel(node.getName(), node));
 //        reloadTopicsAndEvent();
-        drawGraph();
+//        drawGraph();
+        try {
+            Stage stage = new Stage();
+            Parent root = null;
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("create_topic.fxml"));
+            root = loader.load();
+            stage.setTitle("Create Topic Form");
+            stage.setScene(new Scene(root, 600, 400));
+            CreateTopicController children = loader.getController(); //getting controller of window find_win.fxml
+            children.setParent(this);   //setting parent of the controller-child - this
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void addEvent(ActionEvent actionEvent) {

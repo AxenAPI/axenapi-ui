@@ -38,8 +38,12 @@ public class EventGraph {
     }
 
     public void addLink(Link link) {
-        if(link.getEvent() != null) {
-            events.put(link.getEvent().getName(), link.getEvent());
+        if(link.getEvent() == null) {
+            throw new IllegalStateException("Event in link is null");
+        }
+
+        if(events.get(link.getEvent().getName()) == null) {
+            throw new IllegalStateException("Event " + link.getEvent().getName() + " not found");
         }
         links.add(link);
         // get service from link
@@ -78,8 +82,12 @@ public class EventGraph {
 
     public static EventGraph merge(EventGraph g1, EventGraph g2) {
         EventGraph merged = new EventGraph();
+
         g1.getNodes().forEach(merged::addNode);
+        merged.addEvents(g1.getEvents());
+        merged.addEvents(g2.getEvents());
         g1.getLinks().forEach(merged::addLink);
+
         g2.getNodes().forEach(n -> {
             Node node = merged.getNode(n.getName(), n.getType());
             if (node != null) {
@@ -99,6 +107,7 @@ public class EventGraph {
                 merged.addNode(n);
             }
         });
+
         g2.getLinks().forEach(merged::addLink);
 
         merged.links.forEach(l -> {
@@ -106,9 +115,24 @@ public class EventGraph {
             l.setFrom(node);
             node = merged.getNode(l.getTo().getName(), l.getTo().getType());
             l.setTo(node);
+            Event event = l.getEvent();
+            Event mergedEvent = merged.getEvent(event.getName());
+            if(mergedEvent == null) {
+                throw new IllegalStateException("Event " + event.getName() + " not found in merged graph");
+            }
+            l.setEvent(mergedEvent);
         });
 
         return merged;
+    }
+
+    private void addEvents(Map<String, Event> events) {
+        events.values().forEach(e -> {
+            if(!this.events.containsKey(e.getName())) {
+                e.setColor(getEventColor());
+                this.events.put(e.getName(), e);
+            }
+        });
     }
 
     public String getName() {
@@ -217,6 +241,12 @@ public class EventGraph {
     public String getNextTopicName() {
         List<Node> topics = getNodesByType(NodeType.TOPIC);
         return "new_topic" + (topics.size() + 1);
+    }
+
+    public void addEvent(Event event) {
+        if(!events.containsKey(event.getName())) {
+            events.put(event.getName(), event);
+        }
     }
 }
 

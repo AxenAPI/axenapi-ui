@@ -12,7 +12,7 @@
     /*-fx-stroke: #FFD700; !* Updated edge stroke color *!*/
     -fx-stroke-dash-array: 2 5 2 5;
     -fx-fill: transparent;
-    -fx-stroke-line-cap: round;
+    -fx-stroke-line-cap: SQUARE;
     -fx-opacity: 0.8;
 }
 
@@ -117,8 +117,10 @@ RED(255, 0, 0, "edgeRed"), GREEN(0, 255, 0, "edgeGreen"), BLUE(0, 0, 255, "edgeB
 
 .arrow {
     -fx-stroke-width: 2;
+    /*color to see on any edge*/
     -fx-stroke: #5E2D79; /* Updated arrow stroke color */
-    -fx-opacity: 0.8;
+    -fx-opacity: 1;
+    -fx-stroke-dash-array: 20 20 20 20;
 }
 
 /* Custom vertex styles remain the same */

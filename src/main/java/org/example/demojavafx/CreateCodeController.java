@@ -154,7 +154,7 @@ public class CreateCodeController implements Exporter {
             String broker = brokerServerMap.get(service).getAddress();
             String name = service.getName();
             ServiceInfo.ServiceInfoBuilder builder = ServiceInfo.builder();
-            String specPath = specDir + "\\" + name + ".json";
+            String specPath = specDir + "\\" + name.replaceAll("\\s+", "_") + ".json";
             builder.brokerAddress(broker);
             builder.name(name);
             builder.port(port);

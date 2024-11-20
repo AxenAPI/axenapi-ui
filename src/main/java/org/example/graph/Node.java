@@ -1,18 +1,43 @@
 package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graphview.SmartLabelSource;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class Node {
 
+    @Getter
+    @Setter
     private UUID id;
+
+    @Getter
+    @Setter
     private List<String> belongsToGraph;
+
+    @Getter
+    @Setter
     private Set<String> belongsToVisibleGraph;
+
+    @Getter
+    @Setter
     private String name;
+
+    @Getter
+    @Setter
     private NodeType type;
+
+    @Setter
+    @Getter
     private BrokerType brokerType;
 
+    @Setter
+    @Getter
     private boolean visible;
 
     public Node(String name, NodeType type, String belongsToGraph, BrokerType brokerType) {
@@ -41,14 +66,6 @@ public class Node {
         return Objects.hash(name, type);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public NodeType getType() {
-        return type;
-    }
-
     public String toString() {
         return "Node{" +
                 "id=" + id +
@@ -67,10 +84,6 @@ public class Node {
         belongsToGraph.remove(graphName);
     }
 
-    public List<String> getBelongsToGraph() {
-        return belongsToGraph;
-    }
-
     public void addBelongsToGraph(List<String> belongsToGraph) {
         if(this.belongsToGraph != null && this.belongsToVisibleGraph != null) {
             this.belongsToGraph.addAll(belongsToGraph);
@@ -83,20 +96,8 @@ public class Node {
         }
     }
 
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
     public void removeBelongsToVisibleGraph(String graphName) {
         belongsToVisibleGraph.remove(graphName);
-    }
-
-    public Set<String> getBelongsToVisibleGraph() {
-        return belongsToVisibleGraph;
     }
 
     public void addBelongsToVisibleGraph(Set<String> belongsToVisibleGraph) {

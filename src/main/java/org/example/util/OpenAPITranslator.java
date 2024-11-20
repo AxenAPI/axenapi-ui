@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import org.example.demojavafx.datamodel.Color;
 import org.example.graph.*;
 
 import java.io.IOException;
@@ -56,6 +57,10 @@ public class OpenAPITranslator {
         schemas.forEach((key, value) -> {
             Map extensions = value.getExtensions();
             String schemaName = key;
+            Color color = eventGraph.getEventColor();
+            final Event event = eventGraph.getEvent(schemaName) == null ?
+                    new Event(value, color, schemaName) : eventGraph.getEvent(schemaName);
+            eventGraph.addEvent(event);
             if (extensions.containsKey("x-incoming")) {
                 Map<String, Object> xIncoming = (Map<String, Object>) extensions.get("x-incoming");
                 List<String> topics = (List<String>) xIncoming.get("topics");
@@ -70,7 +75,7 @@ public class OpenAPITranslator {
                     }
 
                     String group = consumerGroup.get(topic);
-                    Link incomingLink = new Link(incomingTopic, serviceNode, schemaName, title, value, brokerType, group);
+                    Link incomingLink = new Link(incomingTopic, serviceNode, group, event);
                     eventGraph.addLink(incomingLink);
                 });
             }
@@ -86,9 +91,7 @@ public class OpenAPITranslator {
                     } else {
                         outgoingTopic = eventGraph.getNode(topic, NodeType.TOPIC);
                     }
-                    Link outgoungLink = new Link(serviceNode, outgoingTopic, schemaName, title, value,
-                            null,
-                            null);
+                    Link outgoungLink = new Link(serviceNode, outgoingTopic, null, event);
                     eventGraph.addLink(outgoungLink);
                 });
             }
@@ -110,8 +113,6 @@ public class OpenAPITranslator {
         // format of url: /kafka/{group}/{topic}/{modelName} method post.
         // body schema: schema
         for (Link link : eventGraph.getLinks()) {
-
-
             if(link.getTo().getType() == NodeType.SERVICE
                     && link.getFrom().getType() == NodeType.TOPIC){
                 OpenAPI openAPI = openAPIMap.get(link.getTo().getName());
@@ -120,21 +121,21 @@ public class OpenAPITranslator {
                 }
                 createPaths(link, openAPI);
                 // add schemas from input links
-                openAPI.getComponents().addSchemas(link.getWhat(), link.getSchema());
+                openAPI.getComponents().addSchemas(link.getEvent().getName(), link.getEvent().getSchema());
             }else if(link.getFrom().getType() == NodeType.SERVICE
                     && link.getTo().getType() == NodeType.TOPIC){
                 OpenAPI openAPI = openAPIMap.get(link.getFrom().getName());
                 if(openAPI.getComponents() == null) {
                     openAPI.setComponents(new Components());
                 }
-                openAPI.getComponents().addSchemas(link.getWhat(), link.getSchema());
+                openAPI.getComponents().addSchemas(link.getEvent().getName(), link.getEvent().getSchema());
             }
         }
         // write in each file each specification from the map.
         openAPIMap.forEach((key, value) -> {
             // key - the name of file. ext = json
             // create file and write spec into it
-            String fileName = folderPath + "/" + key + ".json";
+            String fileName = folderPath + "/" + key.replaceAll("\\s+", "_") + ".json";
             try {
                 // map value (OpenAPI) to json or json-string
                 String jsonValue = Json.pretty(value);
@@ -148,20 +149,21 @@ public class OpenAPITranslator {
 
     private static void createPaths(Link link, final OpenAPI openAPI) {
         String linkPath;
-        if(link.getBrokerType() == null) {
+        BrokerType brokerType = link.getBrokerType();
+        if(brokerType == null) {
             linkPath = "/" + "no_type"
                     + "/" + link.getFrom().getName()
-                    + "/" + link.getWhat();
+                    + "/" + link.getEvent().getName();
         } else {
-            if (BrokerType.KAFKA == link.getBrokerType()) {
-                linkPath = "/" + link.getBrokerType().getValue()
+            if (BrokerType.KAFKA == brokerType) {
+                linkPath = "/" + brokerType.getValue()
                         + "/" + link.getGroup()
                         + "/" + link.getFrom().getName()
-                        + "/" + link.getWhat();
+                        + "/" + link.getEvent().getName();
             } else {
-                linkPath = "/" + link.getBrokerType().getValue()
+                linkPath = "/" + brokerType.getValue()
                         + "/" + link.getFrom().getName()
-                        + "/" + link.getWhat();
+                        + "/" + link.getEvent().getName();
             }
         }
         // add operation in openAPI
@@ -175,16 +177,16 @@ public class OpenAPITranslator {
 
     private static PathItem createOperation(Link link) {
         PathItem pathItem = new PathItem();
-        pathItem.setDescription("Operation for " + link.getWhat());
-        pathItem.post(createRequestBody(link.getSchema()));
+        pathItem.setDescription("Operation for " + link.getEvent().getName());
+        pathItem.post(createRequestBody(link.getEvent().getSchema(), link.getEvent().getName()));
         return pathItem;
     }
 
-    private static Operation createRequestBody(Schema schema) {
+    private static Operation createRequestBody(Schema schema, String name) {
         Operation operation = new Operation();
         RequestBody requestBody = new RequestBody();
         requestBody.setRequired(true);
-        requestBody.setContent(createContent(schema));
+        requestBody.setContent(createContent(name));
         operation.setRequestBody(requestBody);
         operation.setResponses(createResponses());
         return operation;
@@ -198,11 +200,11 @@ public class OpenAPITranslator {
         return apiResponses;
     }
 
-    private static Content createContent(Schema schema) {
+    private static Content createContent(String schemaName) {
         Content content = new Content();
         MediaType mediaType = new MediaType();
         Schema ref = new Schema();
-        ref.set$ref("#/components/schemas/" + schema.getName());
+        ref.set$ref("#/components/schemas/" + schemaName);
         mediaType.setSchema(ref);
         mediaType.setSchema(ref);
         content.addMediaType("application/json", mediaType);

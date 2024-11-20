@@ -9,8 +9,7 @@ import com.brunomnsilva.smartgraph.graphview.SmartStylableNode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventTarget;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -20,14 +19,21 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.example.demojavafx.datamodel.Color;
+import org.example.demojavafx.datamodel.EventDataModel;
+import org.example.demojavafx.datamodel.TopicDataModel;
+import org.example.graph.Event;
 import org.example.graph.EventGraph;
 import org.example.graph.Link;
 import org.example.graph.NodeType;
 import org.example.util.EventGraphService;
-import org.example.util.ExportDirUnit;
+import org.example.util.EventGraphUtil;
 import org.example.util.OpenAPITranslator;
 
 import java.io.File;
@@ -35,18 +41,43 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class MainWindow {
+
+    @FXML
+    public MenuBar menuBar;
 
     public StackPane pane;
     public TableView<MyDataModel> fileInfoTable;
     ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
 
-    private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
+    @FXML
+    public TableView<TopicDataModel> topicTable;
+    ObservableList<TopicDataModel> topicList = FXCollections.observableArrayList();
 
+    @FXML
+    public TableView<EventDataModel> eventTable;
+    ObservableList<EventDataModel> eventList = FXCollections.observableArrayList();
+
+    private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
+    private int colorNum = 0;
+
+    @FXML
+    public TabPane tabPane;
+
+    @FXML
+    public GridPane gridPane;
 
     public void initialize() {
         fileInfoTable.setItems(tableData);
+        eventTable.setItems(eventList);
+        topicTable.setItems(topicList);
+
+        eventTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
+        topicTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
+        addColorToEventTable();
+
         TableColumn<MyDataModel, ?> column2 = fileInfoTable.getVisibleLeafColumn(0);
         column2.setCellValueFactory(new PropertyValueFactory<>("title"));
         TableColumn<MyDataModel, Boolean> selectColumn = new TableColumn<>("Select");
@@ -79,6 +110,7 @@ public class MainWindow {
                         eventGraphService.deleteService(serviceName);
                         getTableView().getItems().remove(getIndex());
                         getTableView().refresh();
+                        reloadTopicsAndEvent();
                         drawGraph();
                     });
                 }
@@ -119,6 +151,34 @@ public class MainWindow {
 
     }
 
+    private void addColorToEventTable() {
+        TableColumn<EventDataModel, Color> colorColumn = new TableColumn<>("Color");
+
+        colorColumn.setCellFactory(column -> new TableCell<>() {
+                 @Override
+                 public void updateItem(Color item, boolean empty) {
+                     super.updateItem(item, empty);
+                     if (empty) {
+                         setGraphic(null);
+                     } else {
+                         EventDataModel rowData = getTableView().getItems().get(getIndex());
+                         item = rowData.getColor();
+                         // draw small circle
+                         Circle circle = new Circle();
+                         circle.setRadius(10);
+                         if (item != null) {
+                             circle.setFill(javafx.scene.paint.Color.rgb(
+                                     item.r, item.g, item.b
+                             ));
+                         }
+                         setGraphic(circle);
+                     }
+                 }
+            }
+        );
+        eventTable.getColumns().add(colorColumn);
+    }
+
     public void viewEventGraph(ActionEvent actionEvent) {
 
     }
@@ -143,8 +203,26 @@ public class MainWindow {
                 // java code: add raw in table fileInfoTable
                 tableData.add(new MyDataModel(file.getName(), eventGraph.getTitle(), file.getAbsolutePath()));
             }
+            reloadTopicsAndEvent();
             drawGraph();
         }
+    }
+
+    public void reloadTopicsAndEvent() {
+        eventList.clear();
+        topicList.clear();
+        eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).forEach(topic -> {
+            TopicDataModel topicDataModel = new TopicDataModel(topic.getName(), topic);
+            if(!topicList.contains(topicDataModel)) {
+                topicList.add(topicDataModel);
+            }
+        });
+        eventGraphService.getEventGraph().getEvents().values().forEach(event -> {
+            EventDataModel eventDataModel = new EventDataModel(event.getName(), event.getColor());
+            if(!eventList.contains(eventDataModel)) {
+                eventList.add(eventDataModel);
+            }
+        });
     }
 
     public void resetZoom(ActionEvent actionEvent) {
@@ -188,7 +266,7 @@ public class MainWindow {
             //dynamically change the style, can also be done for a vertex
             Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
             edges.forEach(e -> {
-                if(e.element().getWhat().equals(graphEdge.getUnderlyingEdge().element().getWhat())) {
+                if(e.element().getEvent().equals(graphEdge.getUnderlyingEdge().element().getEvent())) {
                     SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
                     if(!stylableEdge.removeStyleClass("selectedEvent")) {
                         stylableEdge.addStyleClass("selectedEvent");
@@ -199,10 +277,27 @@ public class MainWindow {
 
         SubScene eventGraphScene = new SubScene(graphView, 1024, 768);
         eventGraphScene.setRoot(graphView);
+        setColorsToEdges(graphView, g);
 
         // add subscene in pane
         pane.getChildren().add(eventGraphScene);
         graphView.init();
+    }
+
+    private void setColorsToEdges(SmartGraphPanel<org.example.graph.Node, Link> graphView, Graph<org.example.graph.Node, Link> g) {
+        Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
+        edges.forEach(e -> {
+            SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
+            Event event = e.element().getEvent();
+            if(event != null && event.getColor() != null) {
+                stylableEdge.addStyleClass(event.getColor().cssClass);
+            } else {
+                stylableEdge.addStyleClass(Color.DEFAULT.cssClass);
+            }
+
+
+        });
+
     }
 
     public void addService(ActionEvent actionEvent) {
@@ -233,9 +328,27 @@ public class MainWindow {
     }
 
     public void addTopic(ActionEvent actionEvent) {
-        int number = eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).size() + 1;
-        eventGraphService.addNode(new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null));
-        drawGraph();
+//        int number = eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).size() + 1;
+//        org.example.graph.Node node = new org.example.graph.Node("New_Topic_" + number, NodeType.TOPIC, null, null);
+//        eventGraphService.addNode(node);
+//        topicList.add(new TopicDataModel(node.getName(), node));
+//        reloadTopicsAndEvent();
+//        drawGraph();
+        try {
+            Stage stage = new Stage();
+            Parent root = null;
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("create_topic.fxml"));
+            root = loader.load();
+            stage.setTitle("Create Topic Form");
+            stage.setScene(new Scene(root, 600, 400));
+            CreateTopicController children = loader.getController(); //getting controller of window find_win.fxml
+            children.setParent(this);   //setting parent of the controller-child - this
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void addEvent(ActionEvent actionEvent) {
@@ -263,6 +376,7 @@ public class MainWindow {
     public void clearGraph(ActionEvent actionEvent) {
         eventGraphService.clear();
         tableData.clear();
+        reloadTopicsAndEvent();
         drawGraph();
     }
 
@@ -304,5 +418,47 @@ public class MainWindow {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void addEventToTable(Event event) {
+        eventList.add(new EventDataModel(event.getName(), event.getColor()));
+    }
+
+    public void loadGraph(ActionEvent actionEvent) throws IOException {
+        // choose file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Files");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        //build window for selecting specification files
+        File selectedFile = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+
+        if (selectedFile != null) {
+            EventGraph eventGraph = EventGraphUtil.loadGraph(selectedFile.getAbsolutePath());
+            eventGraphService.clear();
+            eventGraphService.mergeEventGraph(eventGraph);
+            eventGraphService.getEventGraph().getNodesByType(NodeType.SERVICE).forEach(s -> {
+                tableData.add(new MyDataModel(s.getName(), s.getName(), ""));
+            });
+            reloadTopicsAndEvent();
+            drawGraph();
+
+        }
+    }
+
+    public void saveGraph(ActionEvent actionEvent) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Files");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File selectedFile = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+        if (selectedFile != null) {
+            EventGraphUtil.saveGraphAsJson(eventGraphService.getEventGraph(), selectedFile.getAbsolutePath());
+        }
     }
 }

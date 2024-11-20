@@ -1,0 +1,86 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "check_service",
+    "description" : "axenapi Specification for check service",
+    "version" : "1.0.0"
+  },
+  "paths" : {
+    "/kafka/order_group/order_topic/Order" : {
+      "description" : "Operation for Order",
+      "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success. No content."
+          }
+        }
+      }
+    },
+    "/kafka/emp_group/emp_topic/Emp" : {
+      "description" : "Operation for Emp",
+      "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Emp"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success. No content."
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Order" : {
+        "type" : "object",
+        "description": "order message",
+        "x-incoming": {
+          "topics": [
+            "order_topic"
+          ]
+        }
+      },
+      "Emp" : {
+        "type" : "object",
+        "description": "emp message",
+        "x-incoming": {
+          "topics": [
+            "emp_topic"
+          ]
+        }
+      },
+      "Check": {
+        "type": "object",
+        "description": "check message",
+        "x-outgoing": {
+          "topics": [
+            "check_topic"
+          ],
+          "types": ["Message","nmnmnm","kljkljkl"],
+          "tags": [
+            "abcde",
+            "outg"
+          ]
+        }
+      }
+    }
+  }
+}

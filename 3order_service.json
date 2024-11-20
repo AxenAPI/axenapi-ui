@@ -1,0 +1,57 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "order_service",
+    "description" : "axenapi Specification for order_service",
+    "version" : "1.0.0"
+  },
+  "paths" : {
+    "/kafka/check_group/check_topic/Check" : {
+      "description" : "Operation for Check",
+      "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Check"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success. No content."
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Order" : {
+        "type" : "object",
+        "description": "order message",
+        "x-outgoing": {
+          "topics": [
+            "order_topic"
+          ],
+          "types": ["Message","nmnmnm","kljkljkl"],
+          "tags": [
+            "abcde",
+            "outg"
+          ]
+        }
+      },
+      "Check": {
+        "type": "object",
+        "description": "check message",
+        "x-incoming": {
+          "topics": [
+            "check_topic"
+          ]
+        }
+      }
+    }
+  }
+}

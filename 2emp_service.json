@@ -1,0 +1,57 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "emp_service",
+    "description" : "axenapi Specification for emp_service",
+    "version" : "1.0.0"
+  },
+  "paths" : {
+    "/kafka/check_group/check_topic/Check" : {
+      "description" : "Operation for Check",
+      "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Check"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success. No content."
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Check" : {
+        "type" : "object",
+        "description": "check message",
+        "x-incoming": {
+          "topics": [
+            "check_topic"
+          ]
+        }
+      },
+      "Emp" : {
+        "type" : "object",
+        "description": "emp message",
+        "x-outgoing": {
+          "topics": [
+            "emp_topic"
+          ],
+          "types": ["Message","nmnmnm","kljkljkl"],
+          "tags": [
+            "abcde",
+            "outg"
+          ]
+        }
+      }
+    }
+  }
+}

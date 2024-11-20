@@ -23,7 +23,7 @@ public enum CodeGeneratorImpl implements CodeGenerator {
             if(directory.endsWith("\\") || directory.endsWith("/")) {
                 outputDir = directory + serviceInfo.getName();
             } else {
-                outputDir = directory + "\\" + serviceInfo.getName();
+                outputDir = directory + "\\" + serviceInfo.getName().replaceAll("\\s+", "_");
             }
 
 
@@ -41,7 +41,7 @@ public enum CodeGeneratorImpl implements CodeGenerator {
                     .append(",port=")
                     .append(serviceInfo.getPort())
                     .append(",useGradle=true")
-                    .append(",artifactId=").append(serviceInfo.getName());
+                    .append(",artifactId=").append(serviceInfo.getName().replaceAll("\\s+", "_"));
             String cmdStr = cmd.toString();
             System.out.println(cmdStr);
             BufferedReader reader;

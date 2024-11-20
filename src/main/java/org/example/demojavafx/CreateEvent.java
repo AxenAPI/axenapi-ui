@@ -11,10 +11,16 @@ import io.swagger.v3.oas.models.media.Schema;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.example.demojavafx.datamodel.Color;
+import org.example.graph.Event;
+import org.example.graph.EventGraph;
 import org.example.util.EventGraphService;
+
+import java.util.Map;
 
 public class CreateEvent {
 
+    private final EventGraphService eventGraphService = EventGraphService.EVENT_GRAPH_SERVICE;
     public TextArea eventTextArea;
     public TextField eventNameField;
     public MainWindow controller;
@@ -37,7 +43,12 @@ public class CreateEvent {
         Schema schema = deserializeObjectSchema(node);
 
         schema.setName(name);
-        EventGraphService.EVENT_GRAPH_SERVICE.getEventGraph().addEdge(name, schema);
+        Map<String, Event> events =
+                eventGraphService.getEventGraph().getEvents();
+        int colorNum = events.size() % Color.values().length;
+        Event event = new Event(schema, Color.values()[colorNum], name);
+        events.put(event.getName(), event);
+        this.controller.addEventToTable(event);
         controller.drawGraph();
     }
     // copy from  @io.swagger.v3.core.util.ModelDeserializer

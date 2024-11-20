@@ -8,7 +8,7 @@ public enum Color {
     GRAY(128, 128, 128, "edgeGray"), AQUA(0, 255, 255, "edgeAqua"),
     SILVER(192, 192, 192, "edgeSilver"), GOLD(255, 215, 0, "edgeGold"),
     LIME(0, 255, 0, "edgeLime"), TEAL(0, 128, 128, "edgeTeal"), NAVY(0, 0, 128, "edgeNavy"),
-    MAROON(128, 0, 0, "edgeMaroon"), OLIVE(128, 128, 0, "edgeOlive"), INDIGO(75, 0, 130, "edgeIndigo");
+    MAROON(128, 0, 0, "edgeMaroon"), OLIVE(128, 128, 0, "edgeOlive"), INDIGO(75, 0, 130, "edgeIndigo"), DEFAULT(0,0,0, "edgeDefault");
 
     public final int r, g, b;
     public final String cssClass;

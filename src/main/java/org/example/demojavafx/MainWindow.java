@@ -217,15 +217,10 @@ public class MainWindow {
                 topicList.add(topicDataModel);
             }
         });
-        eventGraphService.getEventGraph().getEventNames().forEach(event -> {
-            EventDataModel eventDataModel = new EventDataModel(event);
+        eventGraphService.getEventGraph().getEvents().values().forEach(event -> {
+            EventDataModel eventDataModel = new EventDataModel(event.getName(), event.getColor());
             if(!eventList.contains(eventDataModel)) {
-                eventDataModel.setColor(Color.values()[colorNum]);
                 eventList.add(eventDataModel);
-                colorNum++;
-                if(colorNum == Color.values().length) {
-                    colorNum = 0;
-                }
             }
         });
     }
@@ -293,13 +288,13 @@ public class MainWindow {
         Collection<Edge<Link, org.example.graph.Node>> edges = g.edges();
         edges.forEach(e -> {
             SmartStylableNode stylableEdge = graphView.getStylableEdge(e.element());
-            String eventName = e.element().getEvent().getName();
-            Optional<EventDataModel> eventDataModel = eventList.stream().findFirst().filter(
-                    o -> o.getTitle().equals(eventName)
-            );
-            eventDataModel.ifPresent(
-                    dataModel ->
-                            stylableEdge.addStyleClass(dataModel.getCSSClass()));
+            Event event = e.element().getEvent();
+            if(event != null && event.getColor() != null) {
+                stylableEdge.addStyleClass(event.getColor().cssClass);
+            } else {
+                stylableEdge.addStyleClass(Color.DEFAULT.cssClass);
+            }
+
 
         });
 

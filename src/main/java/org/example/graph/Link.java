@@ -63,6 +63,7 @@ public class Link {
         return null;
     }
 
+    @JsonIgnore
     public String getServiceName() {
         return getNode(NodeType.SERVICE).getName();
     }

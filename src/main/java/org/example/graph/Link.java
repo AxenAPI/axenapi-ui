@@ -2,10 +2,7 @@ package org.example.graph;
 
 import com.brunomnsilva.smartgraph.graphview.SmartLabelSource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -13,6 +10,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Link {
     private Node from;
     private Node to;

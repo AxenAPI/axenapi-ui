@@ -9,6 +9,7 @@ import org.example.demojavafx.datamodel.Color;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "name")
+@Builder
 public class Event {
     private Schema schema;
     private Color color;

@@ -520,4 +520,14 @@ public class MainWindow {
     public void addLinkToList(Link link) {
         linkList.add(new LinkDataModel(link.getFrom().getName(), link.getTo().getName(), link.getEvent().getName()));
     }
+
+    public void check(ActionEvent actionEvent) {
+        EventGraph expectedGraph = HL_TL.getGraph();
+        boolean b = EventGraphUtil.equalsGraphs(eventGraphService.getEventGraph(), expectedGraph);
+        if(b) {
+            System.out.println("!!!!!OK!!!!!");
+        } else {
+            System.out.println("!!!!!NOT OK!!!!!");
+        }
+    }
 }

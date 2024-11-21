@@ -29,8 +29,6 @@
         <ComboBox fx:id="existingEventComboBox" styleClass="comboBox" />
     </HBox>
 
-   <Label styleClass="label" text="Broker name" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-   <fx:include fx:id="brokerChooser" source="chooseBrokerElement.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
    <Button onAction="#handleNewEvent" prefWidth="191.0" styleClass="button" text="Create " GridPane.columnIndex="1" GridPane.rowIndex="6" />
+   <Button  onAction="#close"  styleClass="button" text="Close;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 </GridPane>

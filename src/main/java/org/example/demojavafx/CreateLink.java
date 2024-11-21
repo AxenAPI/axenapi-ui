@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.controlsfx.control.ToggleSwitch;
 import org.example.codegen.info.BrokerServer;
 import org.example.codegen.info.BrokerServers;
@@ -16,12 +17,7 @@ import org.example.util.EventGraphService;
 
 import java.io.IOException;
 
-public class CreateLink implements BrokerServerRequire {
-    @FXML
-    private VBox brokerChooser;
-
-    private BrokerServer brokerServer;
-
+public class CreateLink {
     private final EventGraphService eventGraphService  = EventGraphService.EVENT_GRAPH_SERVICE;;
 
     public ComboBox topicComboBox;
@@ -49,17 +45,23 @@ public class CreateLink implements BrokerServerRequire {
     private BrokerType type;
 
     public void initialize() throws IOException {
-        FXMLLoader childLoader = new FXMLLoader(getClass().getResource("chooseBrokerElement.fxml"));
-        brokerChooser = childLoader.load();
-        ChooseBrokerElement chooseBroker = childLoader.getController();
-        chooseBroker.setRequire(this);
         addElementsIntoComboBoxes();
+
     }
     public void addElementsIntoComboBoxes() {
         EventGraph eventGraph = eventGraphService.getEventGraph();
         eventGraph.getNodesByType(NodeType.TOPIC).forEach(topic -> topicComboBox.getItems().add(topic.getName()));
         eventGraph.getNodesByType(NodeType.SERVICE).forEach(service -> serviceComboBox.getItems().add(service.getName()));
         eventGraph.getEventNames().forEach(event -> existingEventComboBox.getItems().add(event));
+
+        // set default service
+        if(!serviceComboBox.getItems().isEmpty()) {
+            Object s = serviceComboBox.getItems().get(0);
+            serviceComboBox.setValue(s);
+            // set default group
+            groupTextField.setText((String) s);
+        }
+        directionToggleSwitch.setSelected(true);
     }
 
     public void handleNewEvent(ActionEvent actionEvent) {
@@ -98,18 +100,8 @@ public class CreateLink implements BrokerServerRequire {
     public void setParent(MainWindow mainWindow) {
         this.controller = mainWindow;
     }
-
-    @Override
-    public void setBrokerServer(BrokerServer brokerServer) {
-        this.brokerServer = brokerServer;
-        type = BrokerType.KAFKA;
-        if(brokerServer.getType().equals("kafka")) {
-            type = BrokerType.KAFKA;
-        } else if(brokerServer.getType().equals("jms")) {
-            type = BrokerType.JMS;
-        } else if(brokerServer.getType().equals("rabbit")) {
-            type = BrokerType.RABBITMQ;
-        }
-
+    public void close(ActionEvent actionEvent) {
+        Stage window = (Stage) ((javafx.scene.Node) (actionEvent.getTarget())).getScene().getWindow();
+        window.close();
     }
 }

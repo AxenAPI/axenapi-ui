@@ -27,6 +27,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.demojavafx.datamodel.Color;
 import org.example.demojavafx.datamodel.EventDataModel;
+import org.example.demojavafx.datamodel.LinkDataModel;
 import org.example.demojavafx.datamodel.TopicDataModel;
 import org.example.graph.Event;
 import org.example.graph.EventGraph;
@@ -53,6 +54,10 @@ public class MainWindow {
     ObservableList<MyDataModel> tableData = FXCollections.observableArrayList();
 
     @FXML
+    public TableView<LinkDataModel> linkTable;
+    ObservableList<LinkDataModel> linkList = FXCollections.observableArrayList();
+
+    @FXML
     public TableView<TopicDataModel> topicTable;
     ObservableList<TopicDataModel> topicList = FXCollections.observableArrayList();
 
@@ -73,6 +78,7 @@ public class MainWindow {
         fileInfoTable.setItems(tableData);
         eventTable.setItems(eventList);
         topicTable.setItems(topicList);
+        linkTable.setItems(linkList);
 
         eventTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
         topicTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -149,6 +155,52 @@ public class MainWindow {
         fileInfoTable.getColumns().add(selectColumn);
         fileInfoTable.getColumns().add(deleteColumn);
 
+        linkTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("from"));
+        linkTable.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("to"));
+        linkTable.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("eventName"));
+
+        TableColumn<LinkDataModel, Boolean> deleteLinkColumn = new TableColumn<>("Delete");
+
+        deleteLinkColumn.setCellFactory(column -> new TableCell<>() {
+            private final Button deleteButton = new Button();
+            {
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("delete.png")));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitHeight(20);
+                imageView.setFitWidth(20);
+                deleteButton.setGraphic(imageView);
+                // set button size as table cell
+                deleteButton.setMaxSize(20,20);
+            }
+
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                    deleteButton.setOnAction(actionEvent -> {
+                        // get service name
+                        LinkDataModel rowData = getTableView().getItems().get(getIndex());
+                        EventGraph eventGraph = eventGraphService.getEventGraph();
+                        eventGraph.getLinks().stream().findFirst().ifPresent(link -> {
+                            if (link.getFrom().getName().equals(rowData.getFrom())
+                                    && link.getTo().getName().equals(rowData.getTo())) {
+                                eventGraph.getLinks().remove(link);
+                                linkList.remove(rowData);
+                            }
+                        });
+//                        reloadTopicsAndEvent();
+                        drawGraph();
+                    });
+                }
+            }
+
+        });
+
+        linkTable.getColumns().add(deleteLinkColumn);
+
     }
 
     private void addColorToEventTable() {
@@ -211,6 +263,7 @@ public class MainWindow {
     public void reloadTopicsAndEvent() {
         eventList.clear();
         topicList.clear();
+        linkList.clear();
         eventGraphService.getEventGraph().getNodesByType(NodeType.TOPIC).forEach(topic -> {
             TopicDataModel topicDataModel = new TopicDataModel(topic.getName(), topic);
             if(!topicList.contains(topicDataModel)) {
@@ -223,6 +276,8 @@ public class MainWindow {
                 eventList.add(eventDataModel);
             }
         });
+
+        linkList.addAll(eventGraphService.getEventGraph().getLinks().stream().map(link -> new LinkDataModel(link.getFrom().getName(), link.getTo().getName(), link.getEvent().getName())).toList());
     }
 
     public void resetZoom(ActionEvent actionEvent) {
@@ -460,5 +515,9 @@ public class MainWindow {
         if (selectedFile != null) {
             EventGraphUtil.saveGraphAsJson(eventGraphService.getEventGraph(), selectedFile.getAbsolutePath());
         }
+    }
+
+    public void addLinkToList(Link link) {
+        linkList.add(new LinkDataModel(link.getFrom().getName(), link.getTo().getName(), link.getEvent().getName()));
     }
 }

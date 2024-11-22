@@ -1,6 +1,7 @@
 package org.example.util;
 
 import org.example.graph.EventGraph;
+import org.example.graph.Link;
 import org.example.graph.Node;
 
 import java.util.ArrayList;
@@ -54,5 +55,13 @@ public enum EventGraphService {
 
     public void clear() {
         eventGraph = new EventGraph();
+    }
+
+    public void deleteTopic(String name) {
+        this.eventGraph.deleteTopic(name);
+    }
+
+    public void deleteLink(Link element) {
+        this.eventGraph.getLinks().remove(element);
     }
 }

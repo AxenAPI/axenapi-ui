@@ -90,11 +90,11 @@ public class CreateLink {
             } else {
                 link = new Link(serviceNode, topicNode, group, eventSchema);
             }
+            controller.addLinkToList(link);
             eventGraph.addLink(link);
             eventGraphService.getEventGraph().print();
+            controller.drawGraph();
         }
-
-        controller.drawGraph();
     }
 
     public void setParent(MainWindow mainWindow) {

@@ -248,5 +248,14 @@ public class EventGraph {
             events.put(event.getName(), event);
         }
     }
+
+    public void deleteTopic(String name) {
+        // remove all links where the topic is the from or to
+        links.removeIf(link -> link.getFrom().getName().equals(name) || link.getTo().getName().equals(name));
+        // remove the topic
+        nodes.removeIf(node -> node.getName().equals(name));
+        //remove event if no longer used
+        events.values().removeIf(event -> links.stream().noneMatch(link -> link.getEvent().equals(event)));
+    }
 }
 

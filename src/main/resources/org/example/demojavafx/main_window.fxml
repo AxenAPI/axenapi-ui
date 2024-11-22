@@ -88,6 +88,20 @@
                                                            </TableView>
                         </content>
                    </Tab>
+                   <Tab text="links">
+                                           <content>
+                                               <TableView fx:id="linkTable" styleClass="custom-table-view">
+                                                                                  <columns>
+                                                                                      <TableColumn styleClass="table-column" text="from" />
+                                                                                      <TableColumn styleClass="table-column" text="to" />
+                                                                                      <TableColumn styleClass="table-column" text="eventName" />
+                                                                                  </columns>
+                                                                                  <columnResizePolicy>
+                                                                                                                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                                                                                </columnResizePolicy>
+                                                                              </TableView>
+                                           </content>
+                                      </Tab>
                  </tabs>
                </TabPane>
                <ToolBar prefHeight="38.0" prefWidth="255.0" GridPane.rowIndex="0">

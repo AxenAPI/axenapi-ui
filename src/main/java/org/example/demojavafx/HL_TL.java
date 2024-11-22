@@ -28,7 +28,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "Product",
+              "title": "Completed",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -54,7 +54,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "order_created",
+              "title": "Order_created",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -83,7 +83,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "arrived",
+              "title": "Arrived",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -110,7 +110,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "good_is_booked",
+              "title": "Good_is_booked",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -137,7 +137,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "warehouse_is_full",
+              "title": "Warehouse_is_full",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -162,7 +162,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "good_is_delivered",
+              "title": "Good_is_delivered",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -188,7 +188,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "order_is_canceled",
+              "title": "Order_is_canceled",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -215,7 +215,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "car_is_ready",
+              "title": "Car_is_ready",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -242,7 +242,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "open_the_door",
+              "title": "Open_the_door",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -269,7 +269,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "close_the_door",
+              "title": "Close_the_door",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {
@@ -296,7 +296,7 @@ public class HL_TL {
             {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "$id": "https://example.com/product.schema.json",
-              "title": "start_trip",
+              "title": "Start_trip",
               "description": "A product from Acme's catalog",
               "type": "object",
               "properties": {                
@@ -329,47 +329,47 @@ public class HL_TL {
         Map<String, Schema> schemas = new HashMap<>();
         Schema schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(orderCreatedJsonSchema));
-        schemas.put("order_created", schema);
+        schemas.put("Order_created", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(warehouseIsFullJsonSchema));
-        schemas.put("warehouse_is_full", schema);
+        schemas.put("Warehouse_is_full", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(startTripJsonSchema));
-        schemas.put("start_trip", schema);
+        schemas.put("Start_trip", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(completedJsonSchema));
-        schemas.put("completed", schema);
+        schemas.put("Completed", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(arrivedJsonSchema));
-        schemas.put("arrived", schema);
+        schemas.put("Arrived", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(goodIsBookedJsonSchema));
-        schemas.put("good_is_booked", schema);
+        schemas.put("Good_is_booked", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(openTheDoorJsonSchema));
-        schemas.put("open_the_door", schema);
+        schemas.put("Open_the_door", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(closeTheDoorJsonSchema));
-        schemas.put("close_the_door", schema);
+        schemas.put("Close_the_door", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(orderIsCanceledJsonSchema));
-        schemas.put("order_is_canceled", schema);
+        schemas.put("Order_is_canceled", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(goodIsDeliveredJsonSchema));
-        schemas.put("good_is_delivered", schema);
+        schemas.put("Good_is_delivered", schema);
 
         schema = new Schema();
         schema.setJsonSchema(Json31.jsonSchemaAsMap(carIsReadyJsonSchema));
-        schemas.put("trip_is_canceled", schema);
+        schemas.put("Trip_is_canceled", schema);
 
         return schemas;
     }
@@ -410,21 +410,21 @@ public class HL_TL {
                 .group("Deaf_Service")
                 .from(orderCreated)
                 .to(deafService)
-                .event(GRAPH.getEvent("order_created"))
+                .event(GRAPH.getEvent("Order_created"))
                 .build();
 
         Link warehouseFullLink = Link.builder()
                 .group("Deaf_Service")
                 .from(warehouseFull)
                 .to(deafService)
-                .event(GRAPH.getEvent("warehouse_is_full"))
+                .event(GRAPH.getEvent("Warehouse_is_full"))
                 .build();
 
         Link startTripLink = Link.builder()
                 .group("Deaf_Service")
                 .from(startTrip)
                 .to(deafService)
-                .event(GRAPH.getEvent("start_trip"))
+                .event(GRAPH.getEvent("Start_trip"))
                 .build();
         GRAPH.addLink(orderCreatedLink);
         GRAPH.addLink(warehouseFullLink);

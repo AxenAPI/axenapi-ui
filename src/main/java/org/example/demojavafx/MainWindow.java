@@ -182,14 +182,12 @@ public class MainWindow {
                         // get service name
                         LinkDataModel rowData = getTableView().getItems().get(getIndex());
                         EventGraph eventGraph = eventGraphService.getEventGraph();
-                        eventGraph.getLinks().stream().findFirst().ifPresent(link -> {
-                            if (link.getFrom().getName().equals(rowData.getFrom())
-                                    && link.getTo().getName().equals(rowData.getTo())) {
-                                eventGraph.getLinks().remove(link);
-                                linkList.remove(rowData);
-                            }
-                        });
-//                        reloadTopicsAndEvent();
+                        boolean removed = eventGraph.getLinks().removeIf(link -> link.getFrom().getName().equals(rowData.getFrom())
+                                && link.getTo().getName().equals(rowData.getTo())
+                                && link.getEvent().getName().equals(rowData.getEventName()));
+                        if(removed) {
+                            linkList.remove(rowData);
+                        }
                         drawGraph();
                     });
                 }

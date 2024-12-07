@@ -80,22 +80,20 @@ jlink {
     launcher {
         name = 'WinApplication'
     }
+
+    jpackage() {
+        if (org.gradle.internal.os.OperatingSystem.current().windows) {
+            imageOptions += ['--icon', 'icon.ico']
+        }
+        imageOptions += ['--vendor', 'MyCompany'
+        ]
+        installerOptions += [
+                '--vendor', 'MyCompany',
+                '--app-version', version
+        ]
+    }
 }
 
 jlinkZip {
     group = 'distribution'
 }
-
-jpackage() {
-    if (org.gradle.internal.os.OperatingSystem.current().windows) {
-        imageOptions += ['--icon', 'icon.ico']
-    }
-    imageOptions += ['--vendor', 'MyCompany'
-    ]
-    installerOptions += [
-            '--vendor', 'MyCompany',
-            '--app-version', version
-    ]
-}
-
-
